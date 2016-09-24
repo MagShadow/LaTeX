@@ -1,0 +1,178 @@
+% Physics experiment report
+% 24/Sep/2016
+
+% Physics experiment report
+% 23/Sep/2016
+
+\documentclass[a4paper,10pt,notitlepage]{report}
+
+\usepackage{CJKutf8}
+\usepackage{amsmath}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+
+\setlength{\parindent}{2em} 
+
+\begin{CJK*}{UTF8}{gbsn}
+\begin{document}
+
+\title{显微镜实验报告}
+\author{秦光辉}
+\maketitle
+
+\section*{一.数据处理与分析}
+\subsection*{1.显微镜放大倍数测定}
+
+	在放大倍数的测定中,我测了3组数据,列于表一.表中n代表测量的条纹数量,$x_L$代表左端读数,$x_R$代表右端读数,且有
+	
+\begin{align}
+	nx = |x_L - x_R| \\
+	\Delta x = \frac{nx}{x} 
+\end{align}
+	
+\begin{table}[htbp]
+\centering
+
+	\begin{tabular}{|l|l|l|l|l|l|}
+		
+		\multicolumn{3}{l}{\scriptsize unit:mm} \\
+		\hline
+		\# & n & $x_L$ & $x_R$ & nx & $\Delta x$ \\
+		\hline 
+		1 & 5 & 1.380 & 7.204 & 5.824 & 1.165 \\
+		\hline
+		2 & 4 & 1.333 & 6.003 & 4.670 & 1.168 \\
+		\hline
+		3 & 6 & 1.232 & 8.202 & 6.970 & 1.162 \\
+		\hline
+		\multicolumn{6}{c}{\scriptsize Table 1\ 目镜放大倍数测量数据}
+	
+	\end{tabular}
+
+\end{table}
+
+	测得的空间周期平均值为
+	
+\begin{equation}
+	\overline{\Delta x} = 1.165mm
+\end{equation}
+	实验中所用的光栅真实的空间周期为0.100mm,故放大倍数$\beta_0$为
+	
+\begin{equation}
+	\beta_0 = \frac{\overline{\Delta x}}{0.1mm} = 11.7
+\end{equation}
+
+\subsection*{2.利用改装测微目镜测光栅的空间频率}
+
+	测光栅的空间频率的实验中获得了3组数据,列于表二.表中n为测量的条纹数量,$x_L$为左端读数,$x_R$为右端读数,其余的物理量满足
+	
+\begin{align}
+	ny' = |x_L - x_R| \\
+	y' = \frac{ny'}{n} \\
+	y = \frac{y'}{\beta_0}
+\end{align}
+
+\begin{table}[htbp]
+\centering
+	\begin{tabular}{|l|l|l|l|l|l|l|}
+		
+		\multicolumn{7}{l}{\scriptsize unit:mm} \\
+		\hline
+		\# & n & $x_L$ & $x_R$ & $ny'$ & $y'$ & $y$ \\
+		\hline
+		1 & 9 & 2.184 & 7.460 & 5.276 & 0.586 & 0.0501 \\
+		\hline
+		2 & 11 & 1.310 & 7.758 & 6.448 & 0.586 & 0.0501 \\
+		\hline
+		3 & 10 & 7.462 & 5.856 & 0.586 & 0.586 & 0.0501 \\
+		\hline
+		\multicolumn{7}{c}{\scriptsize Table 2\ 光栅甲空间周期测量数据表}
+		
+	\end{tabular}
+\end{table}
+
+	对三次数据求均值,有
+
+\begin{equation}
+	\overline{y} = 0.0501mm
+\end{equation}
+
+	则光栅甲的空间频率为
+	
+\begin{equation}
+	\frac{1}{\overline{y}} = 20.0 mm^{-1}
+\end{equation}
+
+\subsection*{3.利用测微目镜测量未知光栅的空间频率}
+
+	在测微目镜测量光栅的空间频率实验重我测了3组数据,列于表三.表中n代表测量的条纹数量,$x_L$为左端读数,$x_R$为右端读数,其余的物理量满足
+	
+\begin{align}
+	ny = |x_L - x_R| \\
+	y = \frac{ny}{n}
+\end{align}
+
+\begin{table}[htbp]
+\centering
+	\begin{tabular}{|l|l|l|l|l|l|}
+		
+		\multicolumn{6}{l}{\scriptsize unit:mm} \\
+		\hline
+		\# & n & $x_L$ & $x_R$ & $ny$ & $y$ \\
+		\hline
+		1 & 40 & 35.462 & 32.124 & 3.338 & 0.08345 \\
+		\hline
+		2 & 45 & 31.028 & 27.259 & 3.769 & 0.08380 \\
+		\hline
+		3 & 50 & 27.013 & 22.824 & 4.189 & 0.08378 \\
+		\hline
+		\multicolumn{6}{c}{\scriptsize Table 3\ 光栅乙空间周期测量数据表}
+		
+	\end{tabular}
+\end{table}
+
+	光栅乙的空间周期测量的平均值为
+	
+\begin{equation}
+	\overline{y} = 0.08354mm
+\end{equation}
+
+	所以光栅乙的空间频率为
+	
+\begin{equation}
+	\frac{1}{\overline{y}} = 11.97mm^{-1}
+\end{equation}
+
+\section*{二.分析与讨论}
+\subsection*{1.两种显微镜测量的异同}
+
+	两种显微镜的共同之处就是可以讲肉眼看不到的像放大之后测量,而且都只能测量成在分划板上的实像. \\
+	
+	不同之处在于
+	
+\begin{enumerate}
+	
+	\item 改装测微目镜所测到的物体并不是真实的物体,而是经过物镜放大之后的实像,而测微目镜可以直接测得物体的大小.
+	\item 测微目镜的镜筒长度不可调,而生物显微镜可调.
+	\item 测微目镜的测量结果的有效数字要高于改装的测微目镜,但是改装的测微目镜可以测量更小的物体.
+	
+\end{enumerate}	
+
+\subsection*{2.误差来源分析}
+
+\begin{enumerate}
+	
+	\item 由于实像没有恰好成在分划板上带来的视差
+	\item 由于没有把叉丝恰好对准到条纹上而带来的读数误差
+	\item 由于螺距的存在而造成的回程差	
+	
+\end{enumerate}
+	
+\section*{三.收获与感悟}
+
+	中学虽然接触过生物显微镜,但是从来没有用生物显微镜做过测量的工作.这是我第一次利用显微镜测到一组数据并进行分析,这非常有意义!\\
+	
+	虽然实验物理会有这样那样不可避免的误差,但是它任然是一门严谨的学科.这次实验老师非常强调有效数字的问题.有效数字我很早就学过,但是我对它并没有什么深刻的理解.现在我认识到一次实验做的精度高不高,最后结果到底有几位数字是可靠的,都取决于它最终的有效数字.这对我是一种经验的积累!
+
+\end{CJK*}
+\end{document}
