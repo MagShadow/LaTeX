@@ -1,0 +1,534 @@
+\documentclass[a4paper,10pt,notitlepage]{article}
+
+\usepackage{CJKutf8}
+\usepackage{indentfirst}
+
+\setlength{\parindent}{2em} 
+
+\begin{CJK*}{UTF8}{gbsn}
+\begin{document}
+
+\title{操作系统\ 01\ 操作系统概论}
+\author{整理:hiaoxui}
+\maketitle
+
+\section{什么是操作系统} 
+
+\begin{itemize}
+
+	\item 操作系统的地位
+	\begin{itemize}
+		\item 紧贴系统硬件之上,软件之下.
+		\item 计算机硬件-操作系统-系统工具-APP
+	\end{itemize}
+	
+	\item 引入操作系统的目标
+	\begin{itemize}
+		\item 有效性 (系统管理人员的目标)
+		\item 方便性 (用户的观点)
+		\item 可扩充性 (开放的观点)
+	\end{itemize}
+	
+	\item 操作系统的定义
+	
+	操作系统以有效合理的方式,组织和管理计算机的软硬件资源,组织计算机的工作流程,控制应用程序的执行,向用户提供各种服务功能,让用户灵活方便有效地使用计算机,让计算机高效运行
+	
+	\item 操作系统的作用
+	\begin{itemize}
+		\item 操作系统是计算机硬件,软件资源的管理者
+		\item 操作系统是用户使用系统硬件软件的接口
+		\item 操作系统是扩展机,虚拟机
+	\end{itemize}	
+	
+\end{itemize}
+	
+\section{操作系统的特征}
+	
+\begin{itemize}
+	
+	\item 并发性
+	\begin{itemize}
+		\item 并发:微观上还是不同时刻
+		\item 并行:同时发生
+		\item 程序:指令的集合
+		\item 进程:动态实体,有生命周期
+	\end{itemize}
+	
+	\item 共享性
+	\begin{itemize}
+		\item 互斥共享(音频设备)
+		\item 同时共享(磁盘)
+	\end{itemize}
+	
+	\item 不确定性
+	\begin{itemize}
+		\item 进程执行的顺序,速度无法确定,且难以重现某个状态
+	\end{itemize}
+	
+	\item 虚拟
+	\begin{itemize}
+		\item 一个物理实体映射为若干个逻辑实体
+	\end{itemize}
+\end{itemize}
+
+\section{研究操作系统的观点}
+
+\begin{itemize}
+
+	\item 软件的观点
+	\begin{itemize}
+		\item 内在特性-具有一般软件的结构,还具有特殊软件的结构
+		\item 外在特性-操作命令定义集和它的接口
+	\end{itemize}
+	
+	\item 资源管理者的观点
+	\begin{itemize}
+		\item 管理计算机的软硬件资源,实现资源共享,提高利用率.
+		\item 静态分配和动态分配(后者可能会出现死锁)
+	\end{itemize}
+		
+	\item 进程的观点
+	\begin{itemize}
+		\item 操作系统是有一些可以同时独立运行的进程和对这些进程进行协调的核心组成.
+	\end{itemize}
+		
+	\item 虚拟机的观点
+	\begin{itemize}
+		\item 把操作系统分成若干层,每一层完成特定功能而构成一个虚拟机,逐层功能扩充,构成整个操作系统,再向用户提供各种功能.
+	\end{itemize}
+		
+	\item 服务提供者的观点
+	\begin{itemize}
+		\item 操作系统为user提供一组功能强大,方便易用的命令或系统调用.
+	\end{itemize}
+	
+\end{itemize}
+	
+\section{操作系统的功能}
+
+\begin{itemize}
+	
+	\item 进程管理
+	\begin{itemize}
+		\item 进程控制
+		\item 进程的同步和互斥
+		\item 进程间的通信
+		\item 调度
+	\end{itemize}
+	
+	\item 内存管理
+	\begin{itemize}
+		\item 内存的分配和回收
+		\item 存储保护
+		\item 内存扩充
+	\end{itemize}
+	
+	\item 文件管理
+	\begin{itemize}
+		\item 文件的存储空间管理
+		\item 目录管理
+		\item 文件系统的安全性
+	\end{itemize}
+	
+	\item 作业管理
+	\item 设备管理
+	\item 中断处理和错误处理
+	\item 网络与通信管理
+	
+\end{itemize}
+
+\section{信息技术发展历史}
+
+\begin{itemize}
+	
+	\item 信息技术是人对自然世界了解的数字化表示形式
+	\item 信息技术深刻地改变了世界
+
+\end{itemize}
+	
+\section{操作系统发展历史}
+
+\begin{itemize}
+	\item 推动操作系统发展的主要动力
+	\begin{itemize}
+		\item 需求推动发展
+		\item 技术发展,环境变化,器件快速更新换代
+		\item 计算机体系结构不断发展
+	\end{itemize}
+	
+	\item 操作系统发展的驱动力
+	\begin{itemize}
+		\item 追求更高效地发挥硬件资源所提供的计算能力
+		\item 尽可能提高软件开发和运行的效率
+		\item 更好地满足用户对易用性的需求
+	\end{itemize}
+	
+	\item 计算机发展简史
+	\begin{itemize}
+		\item 算盘,机械式手动计算器
+		\item 差分机,分析机
+		\item 图灵机
+		\item ABC是第一台电子计算机
+		\item ENIAC
+		\item EDVAC,冯诺依曼设计,第一台现代意义上的计算机
+		\begin{itemize}
+			\item 存储式计算机模型
+			\item 输入设备,存储器,运算器,控制器,输出设备
+		\end{itemize}
+		\item 
+	\end{itemize}
+	
+	\item 计算机发展的时代划分
+	\begin{itemize}
+		\item 第一代\ 电子管计算机
+		\item 第二代\ 晶体管计算机
+		\item 第三代\ 集成电路计算机
+		\item 第四代\ 大规模集成电路计算机
+		\begin{itemize}
+			\item 以上均采用冯诺依曼结构
+		\end{itemize}
+		\item 第五代\ 新方向,生物DNA计算机,量子计算机,光子计算机等
+	\end{itemize}
+	
+	\item 操作系统发展
+	\begin{itemize}
+		\item 手工操作
+		\begin{itemize}
+			\item 1946年到50年代,电子管,集中计算
+			\item 用户既是程序员,又是操作员,用纸带或卡片操作
+			\item 用户独占全机
+			\item 手工操作的低效率导致CPU利用率低
+		\end{itemize}
+		\item 单道批处理系统
+		\begin{itemize}
+			\item 50年代-60年代,晶体管
+			\item 设计人员,生产人员,操作人员,程序员有了分工
+			\item 分为联机批处理和脱机批处理
+			\begin{itemize}
+				\item 联机批处理\ 慢速的输入输出由主机完成,CPU利用率低
+				\item 脱机批处理\ 利用卫星机完成I/O功能,主机和卫星机并行工作,用mointor控制作业,但monitor容易被用户操作破坏
+			\end{itemize}
+			\item 通道和中断技术
+			\begin{itemize}
+				\item 通道:控制I/O和内存的数据传输
+				\item 中断:CPU收到中断信号后停止工作,处理中断事件
+			\end{itemize}
+			\item 主要问题:CPU和I/O忙闲不均
+			\item IBM引入了I/O机的概念,用相对便宜的计算机读到磁带上,用另一台计算机计算
+			\item 典型操作系统:FMS,IBMSYS
+		\end{itemize}
+		\item 多道批处理处理系统
+		\begin{itemize}
+			\item 60-70年代,集成电路
+			\item 运行特征
+			\begin{enumerate}
+				\item 多道:内存中同时存放好几个作业
+				\item 宏观上并行
+				\item 微观上串行
+			\end{enumerate}
+			\item 需要解决很多问题
+			\begin{enumerate}
+				\item 内存管理
+				\item 内存保护
+				\item CPU调度
+				\item 管理各个作业的交互关系
+			\end{enumerate}
+			\item 典型:IBM的 System/360
+			\item 优点:资源利用率高,作业吞吐量大
+			\item 缺点:用户交互性差,作业平均周转时间长
+		\end{itemize}
+		\item 分时系统
+		\begin{itemize}
+			\item 70年代至今
+			\item 典型:CTSS,TSS/360,MULTICS
+			\item 分时的含义
+			\begin{itemize}
+				\item 多个用户分时
+				\item 前台和后台
+				\item 通常按时间片分配
+			\end{itemize}
+			\item 分时系统的特点
+			\begin{itemize}
+				\item 人机交互性好
+				\item 共享主机
+				\item 用户独立性好,每个用户似乎独占主机
+			\end{itemize}
+			\item MULTICS试图满足所有用户的所有要求,失败!
+		\end{itemize}
+		\item UNIX通用操作系统
+		\begin{itemize}
+			\item 成功的因素
+			\begin{itemize}
+				\item 用C语言编写,易于移植
+				\item 系统源代码非常有效
+				\item 是一个良好的,通用的,多用户,多任务,分时操作系统
+			\end{itemize}
+		\end{itemize}
+		\item 个人计算机操作系统
+		\begin{itemize}
+			\item 80年代,超大规模集成电路
+			\item MS windows, Macint操作系统h
+		\end{itemize}
+	\end{itemize}
+	\item 操作系统发展方向
+		\begin{itemize}
+			\item 宏观:分布式操作系统,机群操作系统
+			\item 微观:嵌入式操作系统
+			\item 主线:面向单个计算设备
+			\item 辅线:支持多机,分布,网络
+			\item 中间层,云操作系统
+		\end{itemize}
+\end{itemize}
+
+\section{操作系统的分类}
+\begin{itemize}
+	\item 软件发展的三个阶段
+	\begin{enumerate}
+		\item 实用的高级程序设计语言出现以前,使用汇编语言
+		\item 软件工程出现以前,出现了操作系统,软件复杂度提高
+		\item 软件工程出现以后,软件开发有了系统化的方法和工具支持
+	\end{enumerate}
+	\item 软件分为系统软件,支撑软件和应用软件
+	\item 操作系统的分类
+	\begin{itemize}
+		\item 批处理操作系统
+		\begin{itemize}
+			\item 单道:每次一个作业,先进先出
+			\item 多道:每次多个作业,无确定次序
+			\item 优点:作业流程自动化,效率高,吞吐率高
+			\item 缺点:无交互手段,调试程序困难
+		\end{itemize}
+		\item 分时操作系统
+		\begin{itemize}
+			\item 一台主机连接若干终端,按时间片划分,给每个用户以独占主机的错觉
+			\item 特点
+			\begin{itemize}
+				\item 多路性
+				\item 交互性
+				\item 独占性
+				\item 及时性
+			\end{itemize}
+			\item 通用操作系统是分时系统和批处理系统的结合,分为前后台.交互性强的放在前台,交互性差的放在后台.分时优先,批处理在后.
+		\end{itemize}
+		\item 实时操作系统
+		\begin{itemize}
+			\item 由四部分构成
+			\begin{itemize}
+				\item 数据采集
+				\item 加工处理
+				\item 操作控制
+				\item 反馈处理
+			\end{itemize}
+			\item 主要应用于实时过程控制,信息查询,事务处理等过程
+			\item 能力
+			\begin{itemize}
+				\item 实时时钟管理
+				\item 过载保护
+				\item 高可靠性
+			\end{itemize}
+		\end{itemize}
+		\item 网络操作系统
+		\begin{itemize}
+			\item 功能
+			\begin{itemize}
+				\item 寻常操作系统的功能
+				\item 网络通信功能
+				\item 网络资源管理
+				\item 网络服务
+				\item 网络管理
+				\item 互操作
+			\end{itemize}
+			\item 分类
+			\begin{itemize}
+				\item C/S模式,客户机服务机
+				\item P2P
+			\end{itemize}
+		\end{itemize}
+		\item 分布式操作系统
+		\begin{itemize}
+			\item 特征
+			\begin{itemize}
+				\item 透明性 资源共享,分布.
+				\item 自治性 处于分布式系统的多个主机处于平等位置
+			\end{itemize}
+			\item 和网络操作系统的区别
+			\begin{itemize}
+				\item 分布式没有主从关系
+				\item 分布式的资源所有用户共享,无限制
+				\item 分布式系统中若干个计算机可以协作完成一项任务
+			\end{itemize}
+			\item 分布式系统和网络操作系统的比较
+			\begin{itemize}
+				\item 分布式系统耦合性强
+				\item 分布式系统是并行的
+				\item 透明性:分布式系统的用户不知道资源在哪里
+				\item 健壮性:分布式系统要求有更强的容错能力
+			\end{itemize}
+		\end{itemize}
+		\item 个人计算机操作系统
+		\begin{itemize}
+			\item 特征
+			\begin{itemize}
+				\item 主要用于事务处理,个人娱乐
+				\item 使用方便,支持多种硬件和外设,效率不必很高
+				\item 开放性:支持多种系统互联
+				\item 通用性:应用程序可移植
+				\item 高性能:性能不断提高
+				\item 多采用微内核结构
+			\end{itemize}
+		\end{itemize}
+		\item 嵌入式操作系统
+		\begin{itemize}
+			\item 微型化:能源少,内存小,无外村,处理字节小,外部设备千变万化
+			\item 可定制
+			\item 实时性
+			\item 可靠性
+			\item 开发环境
+		\end{itemize}
+		\item 其他操作系统
+		\begin{itemize}
+			\item 大型机操作系统
+			\item 服务器操作系统
+			\item 多处理器操作系统
+			\item 掌上操作系统
+			\item 传感节点操作系统
+			\item 智能卡操作系统
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\section{操作系统设计}
+\begin{itemize}
+	\item 操作系统设计的困难
+	\begin{itemize}
+		\item 设计复杂度高
+		\item 正确性难以保证
+		\item 研制周期长
+	\end{itemize}
+	\item 操作系统设计过程
+	\begin{itemize}
+		\item 功能设计
+		\item 算法设计
+		\item 结构设计
+	\end{itemize}
+	\item 操作系统设计目标
+	\begin{itemize}
+		\item 可靠性
+		\item 高效性
+		\begin{itemize}
+			\item 目态:为用户服务
+			\item 管态:为用户服务的同时做系统的维护工作
+		\end{itemize}
+		\item 易维护性
+		\item 可移植性
+		\item 安全性
+		\item 简明性
+		\item 可理解性
+		\item 性能
+	\end{itemize}
+	\item 操作系统结构设计
+	\begin{itemize}
+		\item 系统模块化,模块标准化,通信规范化
+		\item 内核:一组程序模块,提供进程并发执行的基本功能和基本操作
+		\begin{itemize}
+			\item 单内核:有较多功能
+			\item 微内核:仅有所必需的核心功能
+		\end{itemize}
+		\item 内核要提供的功能
+		\begin{itemize}
+			\item 资源抽象
+			\item 资源分配
+			\item 资源共享
+		\end{itemize}
+	\end{itemize}
+	\item 操作系统的体系结构
+	\begin{itemize}
+		\item 整体式结构
+		\begin{itemize}
+			\item 整个系统按照功能进行设计和模块划分
+			\item 优点:结构紧密,组合方便,比较灵活,效率高.经过发展已经比较成熟
+			\item 缺点:模块的划分和接口未必合理,模块依赖关系复杂,不利于修改,不可靠
+		\end{itemize}
+		\item 层次式结构
+		\begin{itemize}
+			\item 各层之间是单向依赖或调用关系
+			\begin{itemize}
+				\item 半序:层内允许互相调用和通信
+				\item 全序:层内独立
+			\end{itemize}
+			\item 优点:功能明确,调用关系清晰.高层错误不会影响低层,避免了递归调用;利于维护和扩充
+			\item 缺点:效率低
+			\item 分层原则
+			\begin{itemize}
+				\item 被调用功能在低层
+				\item 活跃功能在低层:提高效率
+				\item 公共模块在最底层
+				\item 存储器管理在低层
+				\item 最底层的硬件抽象
+				\item 资源分配在外层,利于修改
+			\end{itemize}
+		\end{itemize}
+		\item 虚拟机结构
+		\begin{itemize}
+			\item 物理计算机资源通过多重化和共享技术变成多个虚拟机
+			\item 每台虚拟机都和裸机完全一样,可以运行任何操作系统
+		\end{itemize}
+		\item 微内核结构
+		\begin{itemize}
+			\item 微内核的工作:处理客户和服务器间的通信
+			\item 微内核将操作系统分成两个部分,一部分是运行在用户态的进程,一部分是和心态的进程
+			\item 优点:一致性接口,可扩充性,可移植性,可靠性,支持分布式操作系统,支持面向对象的操作系统
+			\item 缺点:效率低
+		\end{itemize}
+	\end{itemize}
+	\item 操作系统运行模型
+		\begin{itemize}
+			\item 独立运行的内核模型
+			\begin{itemize}
+				\item 系统执行和应用进程之间不存在联系
+			\end{itemize}
+			\item 操作系统功能作为进程执行
+		\end{itemize}
+\end{itemize}
+
+\section{操作系统提供的基本服务和用户接口}
+\begin{itemize}
+	\item 操作系统提供的基本服务
+	\begin{itemize}
+		\item 创建程序
+		\item 执行程序
+		\item 数据I/O
+		\item 信息存取
+		\item 通信服务
+		\item 错误检测和处理
+		\item 保证其高效工作,提高效率(资源分配,统计,保护)
+	\end{itemize}
+	\item 操作系统提供的用户接口
+	\begin{itemize}
+		\item 操作系统通过程序接口和操作接口两种方式向用户提供服务和功能
+		\begin{itemize}
+			\item 程序接口:操作系统对外提供功能和服务的手段,应用程序使用系统调用可以获得操作系统的低层服务
+			\item 操作接口:一组控制命令和作业控制语言,是操作系统为用户提供组合和控制作业执行的手段
+		\end{itemize}
+	\end{itemize}
+	\item 程序接口和系统调用
+	\begin{itemize}
+		\item 系统调用是为了扩充及其功能,增强系统能力,方便用户
+		\item 是用户程序和其他系统程序获得操作系统服务的唯一途径
+		\item 基于UNIX的可移植操作系统接口是国际标准化组织给出的有关系统调用的国际标准:P操作系统IX
+	\end{itemize}
+	\item API,库函数和系统调用
+	\begin{itemize}
+		\item API是一个函数定义,说明如何获得给定的服务
+		\item 库函数是一种API,一般和系统调用一一对应
+	\end{itemize}
+	\item 程序接口和系统调用
+	\begin{itemize}
+		\item 用户接口-库函数接口-系统调用接口
+	\end{itemize}
+	\item 操作系统的标准化
+	
+\end{itemize}
+
+\end{CJK*}
+\end{document}
