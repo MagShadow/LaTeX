@@ -1,0 +1,310 @@
+\documentclass[a4paper,12pt,notitlepage]{article}
+
+\usepackage{CJKutf8}
+\usepackage{indentfirst}
+
+\setlength{\parindent}{2em} 
+
+\begin{CJK*}{UTF8}{gbsn}
+\begin{document}
+
+\title{操作系统\ 02\ 操作运行环境}
+\author{整理:hiaoxui}
+\maketitle
+
+\section{计算机层次结构}
+
+\begin{itemize}
+	\item 操作系统在硬件之上,软件之下,直接与硬件打交道
+	\item 计算机系统的操作
+	\begin{itemize}
+		\item I/O 设备与CPU可并行运行
+		\item 每个设备控制器负责一种特定的设备类型
+		\item 每个设备控制器有一个局部缓存
+		\item CPU 在主存与局部缓存之间移动数据
+		\item 设备控制器通过引发中断来通知CPU操作已完成
+	\end{itemize}
+	\item 任何系统软件都是硬件功能的延伸,操作系统直接依赖于硬件条件,OS的硬件环境以较分散的形式和各种管理相结合
+\end{itemize}
+
+\section{中央处理器CPU}
+\begin{itemize}
+	\item CPU任务
+	\begin{itemize}
+		\item 按照程序计数器的指向从主存读取指令,对指令进行译码,取出操作数,然后执行指令
+		\item 任何程序的执行都必须真正占有处理器
+	\end{itemize}
+	\item 多核和多CPU的区别
+	\begin{itemize}
+		\item 多核是一个CPU有多个处理器核心,之间通过CPU内部总线进行通讯
+		\item 多CPU是多个处理器芯片工作在同一个系统上,之间通过主板上的总线进行通讯
+	\end{itemize}
+	\item 流水线结构发展到发射体系结构
+	\begin{itemize}
+		\item 流水线结构:仿照流水装配线
+		\item 发射体系结构:增加了保持缓冲区
+	\end{itemize}
+	\item 根据指令流和数据流的不同组织方式,计算机系统分为四类
+	\begin{itemize}
+		\item 单指令流单数据流,一个CPU在一个存储器上执行单条指令
+		\item 单指令流多数据流,单条指令流控制了多个处理单元 同时执行,每个处理单元包括处理器及相关的数据存储,一条指令事实上控制了不同的处理器对不同的数据进行了操作。
+		\item 多指令流单数据流,一个数据流被传送给一组处理器,通过这一组处理器上的不同指令操作最终得到处理结果
+		\item 多个处理器对各自不同的数据集同时执行不同的指令流,是目前最流行的并行计算平台.
+	\end{itemize}
+	\item CPU构成
+	\begin{itemize}
+		\item 运算器
+		\item 控制器
+		\item 寄存器
+		\item 高速缓存:处于cpu和物理内存之间
+	\end{itemize}
+	\item 指令
+	\begin{itemize}
+		\item 指令:能被计算机识别并更新的二进制代码
+		\item 指令系统:每台计算机的机器指令集合
+	\end{itemize}
+	\item cpu工作方式
+	\begin{itemize}
+		\item 处理器每次从存储器中读取一条指令,在指令完成后,根据指令的类别自动将程序计数器的值变成下一条指令的地址
+		\item 取到的指令放在处理器的指令寄存器中,处理器解释并执行这条指令
+		\item 指令周期:单条指令处理的过程
+	\end{itemize}
+	\item 指令的类别
+	\begin{itemize}
+		\item 访问存储器指令
+		\item I/O指令
+		\item 算数逻辑指令
+		\item 控制转移指令
+		\item 处理器控制指令
+	\end{itemize}
+	\item 特权指令和非特权指令
+	\begin{itemize}
+		\item 特权指令一般能引起处理器状态的改变
+		\item 特权指令只允许内核程序使用
+	\end{itemize}
+	\item 管态和目态
+	\begin{itemize}
+		\item 管态能指令指令集全集,能改变CPU状态,OS在管态下运行
+		\item 目态是用户程序状态
+	\end{itemize}
+	\item 状态转换
+	\begin{itemize}
+		\item 设置PSW(修改程序状态字)实现
+	\end{itemize}
+	\item 目态到管态的几种情况
+	\begin{itemize}
+		\item 程序请求操作系统服务,执行一条系统调用
+		\item 程序运行时,产生一个中断事件,运行程序被中断,让中断处理程序工作
+		\item 以上均通过中断机构发生
+	\end{itemize}
+	\item 程序状态字PSW
+	\begin{itemize}
+		\item 指示处理器状态
+		\item 状态代码
+		\begin{itemize}
+			\item 程序基本状态
+			\begin{itemize}
+				\item 程序计数器:下一条指令地址
+				\item 条件码:指令的结果状态
+				\item 处理器状态位
+			\end{itemize}
+			\item 中断码
+			\item 中断屏蔽码:是否响应中断事件
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\section{存储系统}
+\begin{itemize}
+	\item 存储器类型
+	\begin{itemize}
+		\item 读写型存储器
+		\begin{itemize}
+			\item 可以吧数据存入其中任一地址单元,并可以在任何时候取出来,或者存入新的数据存储器
+			\item RAM:随机访问存储器
+		\end{itemize}
+		\item 只读型存储器
+		\begin{itemize}
+			\item 只能co从中读取数据,不能用普通的方法向其中写数据
+			\item PROM:可编程的只读存储器
+			\item EPROM:可以用特殊紫外线擦除信息位,然后用EPROM写入数据
+		\end{itemize}
+		\item 存储器的层次结构
+		\begin{itemize}
+			\item cpu寄存器-高速缓存-主存储器-磁盘-光盘
+			\item 三个因素:容量,速度,成本
+		\end{itemize}
+		\item 存储访问局部原理
+		\begin{itemize}
+			\item 提高存储系统效能
+			\item 较短时间内代码和数据能比较稳定地保持在一个存储器 局部区域,处理器主要和存储器这个局部区域打交道
+		\end{itemize}
+		\item 设计多级存储体系结构
+		\begin{itemize}
+			\item 原则:级别较低存储器比率小于级别较高存储器比率
+		\end{itemize}
+		\item 存储保护
+		\begin{itemize}
+			\item 目的
+			\begin{itemize}
+				\item 防止用户程序破坏OS
+				\item 防止其互相干扰
+			\end{itemize}
+			\item 界地址寄存器
+			\begin{itemize}
+				\item 在CPU中设置一对界限寄存器来存放用户作业在主存储器中下限和上限地址,防止越界
+			\end{itemize}
+			\item 存储键
+			\begin{itemize}
+				\item 每个存储块有一个月起相关的二进位组成的存储保护键
+			\end{itemize}
+		\end{itemize}
+	\end{itemize} 
+\end{itemize}
+
+\section{缓冲技术}
+\begin{itemize}
+	\item 目的
+	\begin{itemize}
+		\item 解决部件之间速度不匹配的问题
+		\item cpu处理速度和设备传输数据速度不匹配,用缓冲区缓解矛盾
+	\end{itemize}
+	\item 多缓冲技术
+	\begin{itemize}
+		\item Cache:离cpu最近
+		\item Cache分为两级,cpu会依次检索,如果没有找到,就会到系统内存中找
+	\end{itemize}
+\end{itemize}
+
+\section{中断机制}
+\begin{itemize}
+	\item 目的
+	\begin{itemize}
+		\item 解决主机和外设的并行工作问题
+		\item 提高可靠性
+		\item 实现多机控制
+		\item 实现实时控制
+		\item 充分发挥了处理器的使用效率,免除cpu不断查询和等待
+	\end{itemize}
+	\item 中断的定义
+	\begin{itemize}
+		\item CPU对系统中或系统外发生的异步事件做出反应
+		\item 异步事件:无一定时序关系的随即发生的事件
+		\item CPU暂停正在执行的程序,保留现场后自动转去执行相应事件的处理程序,处理完成后返回断点,继续执行被打断的程序
+	\end{itemize}
+	\item 中断的分类
+	\begin{itemize}
+		\item 按照中断事件的性质和激活方式划分
+		\begin{itemize}
+			\item 强迫性中断:正在运行的程序不期望的,是由随机事件或外部请求信息引起的
+			\item 自愿性中断:用户在程序中有意安排的中断
+		\end{itemize}
+		\item 按照事件的来源和实现手段划分
+		\begin{itemize}
+			\item 硬中断
+			\begin{itemize}
+				\item 外中断:CPU和内存之外的中断,和正在执行的指令无关,可以屏蔽
+				\item 内中断:来自处理器和内存之间的中断,一般称之为异常,和指令有关,不可以屏蔽
+			\end{itemize}
+			\item 软中断:信号和软件中断
+		\end{itemize}
+	\end{itemize}
+	\item 中断和异常的区别
+	\begin{itemize}
+		\item 异常是由CPU控制单元产生的,源于现行程序执行指令过程中检测到例外
+		\item 异常是处理器正在执行的现行指令引起的
+		\item 异常处理过程可能发生中断,反之则不会发生
+		\item 异常包括出错和陷入,却别是发生时保存的返回指令地址不同
+		\begin{itemize}
+			\item 出错保存指向触发异常的那条指令
+			\item 陷入保存触发异常的那条指令的下一条指令
+			\item 从异常返回时,出错会重新执行那条指令,陷入不会
+		\end{itemize}
+	\end{itemize}
+	\item 中断和异常的响应及服务
+	\begin{itemize}
+		\item 执行完当前指令后,根据中断源提供的中断向量,找到相应服务入口地址并调用此服务程序,中断和异常可以作为统一模式加以实现
+		\item 使用软件和硬件结合的方法处理中断和异常
+		\item 发现中断源(根据中断优先级)
+		\item 保护现场:将PSW保存至核心栈
+		\item 转向中断/异常的处理程序:已经转至核心态
+		\item 恢复现场
+	\end{itemize}
+	\item 处理器如何发现中断信号
+	\begin{itemize}
+		\item 在每条指令的最后时刻扫描中断寄存器,询问有无中断信号
+		\item 如果发现中断,中断硬件将该中断触发器内容按规定编码送入PSW的相应位,称为中断码
+	\end{itemize}
+	\item 处理器如何发现异常
+	\begin{itemize}
+		\item 指令的实现逻辑发现发生异常就转入OS内的异常处理程序
+	\end{itemize}
+	\item 典型的中断处理
+	\begin{itemize}
+		\item I/O中断:正常结束和传输错误
+		\item 时钟中断:维护软件时钟,处理器调度,控制系统定时任务,实时处理
+		\item 硬件故障中断:需要人工干预
+		\item 程序性中断:程序指令出错,越权或者寻址越界
+	\end{itemize}
+	\item 中断优先级
+	\begin{itemize}
+		\item 中断优先级是由硬件规定的,系统根据引起中断事件的重要性与紧迫程度将中断源划分为若干个级别
+		\item 当有多个中断同时发生时,系统根据中断优先级决定响应中断次序,优先响应级别高的中断;对同级中断按硬件规定次序
+		\item 中断优先级只是表示中断装置响应中断的次序 ,在系统设计时已被确定且不能更改
+		\item 操作系统响应中断存在先后次序,中断处理顺序和响应顺序未必一致,即先响应的中断可能滞后处理
+	\end{itemize}
+	\item 中断屏蔽
+	\begin{itemize}
+		\item 中断发生时,CPU不予响应的状态
+	\end{itemize}
+	\item 多重中断的处理
+	\begin{itemize}
+		\item 串行处理
+		\item 嵌套处理
+		\item 及时处理
+	\end{itemize}
+\end{itemize}
+
+\section{I/O技术}
+\begin{itemize}
+	\item 通道
+	\begin{itemize}
+		\item 独立于CPU,专门负责I/O运输工作的处理单元
+		\item 可以把CPU从I/O事务中解脱出来,提高并行度
+		\item 优点
+		\begin{itemize}
+			\item 实现CPU和外设并行工作
+			\item 可以让多个程序同时执行,让各个程序分别使用计算机的不同资源
+		\end{itemize}
+		\item DMA技术:通过系统总线中的一个独立控制单元—DMA控制器,自动控制成块数据在内存和I/O单元之间的传送
+		\item 缓冲技术
+	\end{itemize}
+\end{itemize}
+
+\section{时钟}
+\begin{itemize}
+	\item 作用
+	\begin{itemize}
+		\item 判断系统是否进入死循环
+		\item 控制各个作业按时间片轮转执行
+		\item 输出正确的时间信息给实时控制设备
+		\item 唤醒需按照时间给定时间执行的外部事件
+		\item 记录使用外设的时间和外部事件发生的时间间隔
+		\item 记录用户和系统需要的绝对时间
+	\end{itemize}
+	\item 分类
+	\begin{itemize}
+		\item 硬件时钟:用某个寄存器来模拟
+		\begin{itemize}
+			\item 绝对时钟
+			\item 相对时钟
+		\end{itemize}
+		\item 软件时钟
+		\begin{itemize}
+			\item 用作相对时钟
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\end{CJK*}
+\end{document}

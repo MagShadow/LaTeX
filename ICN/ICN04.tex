@@ -1,0 +1,194 @@
+\documentclass[a4paper,12pt,notitlepage]{article}
+
+\usepackage{CJKutf8}
+\usepackage{indentfirst}
+
+\setlength{\parindent}{2em} 
+
+\begin{CJK*}{UTF8}{gbsn}
+\begin{document}
+
+\title{ICN\ 04\ 数据信号及传输}
+\author{整理:hiaoxui}
+\maketitle
+
+\section{数据,信号和传输}
+
+\begin{itemize}
+	\item 分类
+	\begin{itemize}
+		\item 直接和间接
+		\item 信道通信方式
+		\begin{itemize}
+			\item 单工:单向
+			\item 半双工:双向但不同时
+			\item 全双工:双向且可以同时
+		\end{itemize}
+	\end{itemize}
+	\item 数据:携带有意义的实体
+	\begin{itemize}
+		\item 数字信号
+		\item 模拟数据
+	\end{itemize}
+	\item 信号:电子或电磁编码
+	\begin{itemize}
+		\item 载波:运载数据的实体
+		\item 离散信号
+		\item 连续信号
+		\item 周期信号
+		\begin{itemize}
+			\item amplitude
+			\item periodic/frequency
+			\item phase
+		\end{itemize}
+		\item 信号的强度
+		\begin{itemize}
+			\item 衰耗和增益
+			\item 衡量功率的相对大小计量单位:分贝
+			\begin{equation}
+				D = 10 \log_{10}\frac{p1}{p2}
+			\end{equation}
+		\end{itemize}
+	\end{itemize}
+	\item 传输:通过信号的传播和处理进行的数据通信
+	\begin{itemize}
+		\item 模拟传输
+		\begin{itemize}
+			\item 模拟数据->电话->模拟信号
+			\item 数字信号->modem->模拟信号
+			\item 需要用放大器放大失真信号(噪声也会放大)
+		\end{itemize}
+		\item 数字传输
+		\begin{itemize}
+			\item 模拟数据->modem->数字信号
+			\item 数字信号->编码解码器->数字信号
+			\item 需要用中继器还原真实数据
+		\end{itemize}
+		\item 传输减损:振幅变小
+		\item 传输失真:畸变
+		\item 噪声
+		\begin{itemize}
+			\item 信噪比
+			\begin{equation}
+				R_{S/N}=10log_{10}\frac{S}{N}
+			\end{equation}
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\section{信道容量}
+\begin{itemize}
+	\item 指定条件下信道传输数据的能力
+	\begin{itemize}
+		\item data rate:bps
+		\item bandwidth:Hz
+	\end{itemize}
+	\item 比特率和波特率
+	\begin{itemize}
+		\item 比特率:每秒的比特数,bps
+		\item 符号率/波特率:调制速率,单位时间内传输的波形个数
+		\begin{itemize}
+			\item 设一个波形持续时间为T,则
+			\begin{equation}
+				D_{baud} = \frac{1}{T}
+			\end{equation}
+		\end{itemize}
+	\end{itemize}
+	\item Nyquist Theory
+	\begin{itemize}
+		\item 离散无噪声的数字通道信道容量为
+		\begin{equation}
+			C = 2W\log_2L
+		\end{equation}
+		\item W为带宽
+		\item L为代码的进制数
+		\item C单位是bps
+	\end{itemize}
+	\item Sahnnon Theory
+	\begin{itemize}
+		\item 在信号平均功率有限的白噪声(通信系统内部产生的噪声)信道中,信道容量为
+		\begin{equation}
+			C = W\log_2(1+S/N)
+		\end{equation}
+	\end{itemize}
+\end{itemize}
+
+\section{数字编码技术}
+\begin{itemize}
+	\item 基带传输与通带传输
+	\begin{itemize}
+		\item 基带信号:基本频带信号,来自信源
+		\item 通带信号:基带信号通过载波调制之后,信号频率范围搬移到较高频段以便在信道中传输
+	\end{itemize}
+	\item 数字数据和数字信号
+	\begin{itemize}
+		\item 直接传输:可能失真而无法识别
+		\item 不归零:在一定时间内信号没有变换(没有返回零电压)
+		\begin{itemize}
+			\item NRZ-L 用正负电压表示两个二进制位
+			\item NRZI 在一位时间内维持一常量电压脉冲
+			\begin{itemize}
+				\item 简单,带宽利用率高
+				\item 缺少同步能力
+			\end{itemize}
+		\end{itemize}
+		\item 双相编码
+		\begin{itemize}
+			\item Manchester:在每一位中间有一个跳变(0从高到低,1从低到高)
+			\item Differential Manchester:数据定义在每一位起始处是否有跳位(0在一开始有变换,1在一开始没变化)
+			\item Biphase编码在每一位中间都有跳变,仅用于解决时钟不同步问题,相位变化解决接反问题
+		\end{itemize}
+	\end{itemize}
+	\item 数字数据和模拟信号
+	\begin{itemize}
+		\item 数字调制:把低频的数字信号变换成选适合于信道传输的处理过程
+		\item 数字解调:把信道中已调信号转换成低频数字信号的处理过程
+		\item 调制解调:把低频信号转换成高频信号以便于数字信号传播,即将待传信号的频谱进行搬移和还原
+		\item 基带传输的调制方式
+		\begin{itemize}
+			\item AM调幅
+			\item FM调频
+			\item PM调相
+		\end{itemize}
+		\item 正交调幅调制:利用正负和相位的不同组合来调制
+		\begin{itemize}
+			\item QAM-16的特性
+			\begin{itemize}
+				\item 可供选择的相位有12种,每一种相位有1,2或3种振幅可选
+				\item 4bit编码有16中不同组合,16个点中可以对应一种4bit编码
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+	\item 模拟数据和数字信号
+	\begin{itemize}
+		\item 数字化:将模拟数据转换成数字信号的过程
+		\item 编码解码技术(CODEC)
+		\item 脉冲编码调制
+		\begin{itemize}
+			\item 采样定理:如果以两倍最高有效频率采样的话,可以采集到原信号所有信息
+			\item 模拟信号->采样->量化->编码->数字传输->解码->滤波->输出信号
+			\item PAM脉冲:时间离散,幅值连续
+			\item 量化:把样值信号无限多的可能取值,近似用有限个数的数值表示
+			\item 量化级:把样值信号幅度分为很多度量单位,一个度量单位称为一个量化级.
+			\item 量化误差:量化值和原样值的幅度差别
+			\item PCM输出:时间离散,幅值离散
+		\end{itemize}
+		\item 增量调制
+		\begin{itemize}
+			\item 用差值编码,要求相邻的样值之间变化不大(一个量化级)
+		\end{itemize}
+		\item 差分调制
+		\begin{itemize}
+			\item 数字化后输出的不是数字化幅度本身,而是和前一个值的差值
+		\end{itemize}
+	\end{itemize}
+	\item 模拟数据和模拟信号
+	\begin{itemize}
+		\item 模拟数据->modem->模拟信号
+		\item 模拟调制:把一个输入信号和频率为$f_c$的载波结合,以便产生一个以$f_c$为中心的信号
+		\item 无线传输无法传递基带信号,而且有了modem技术,可以多路复用
+	\end{itemize}
+\end{itemize}
+
+\end{CJK*}
+\end{document}

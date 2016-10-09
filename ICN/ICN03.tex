@@ -1,0 +1,160 @@
+\documentclass[a4paper,12pt,notitlepage]{article}
+
+\usepackage{CJKutf8}
+\usepackage{indentfirst}
+
+\setlength{\parindent}{2em} 
+
+\begin{CJK*}{UTF8}{gbsn}
+\begin{document}
+
+\title{ICN\ 03\ 网络体系结构与TCP/IP}
+\author{整理:hiaoxui}
+\maketitle
+
+\section{协议和层次结构}
+
+\begin{itemize}
+	\item 计算机网络协议:网络中两个实体之间控制数据通信的规则和约定的集合
+	\item 要素
+	\begin{itemize}
+		\item 语法:数据结构,编码和信号电平
+		\item 语义:用于协调和差错处理的控制信息
+		\item 时序:传输速率匹配和事件先后顺序
+	\end{itemize}
+	\item 层级结构
+	\begin{itemize}
+		\item 层次性:层次间有单向依赖关系
+		\item 结构性:上层隐藏下层细节
+		\item 相关概念
+		\begin{itemize}
+			\item 第n层协议
+			\item 对等实体:相同协议层的实体
+			\item 协议栈:一组协议
+			\item 接口:层与层之间提供原语操作和服务
+			\item 水平通信/虚通信:对等实体进行通信
+			\item 垂直通信/实际通信:相邻层之间进行通信
+		\end{itemize}
+		\item 协议分层原则
+		\begin{itemize}
+			\item 目标机器第n层收到的信息和对等实体的信息应完全一致
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\section{接口与服务}
+\begin{itemize}
+	\item 服务
+	\begin{itemize}
+		\item 服务提供者和用户:上层使用下层服务
+		\item 分类
+		\begin{itemize}
+			\item 面向连接/有连接服务
+			\begin{itemize}
+				\item 类似于电话服务
+				\item 本质上是一个管道
+				\begin{enumerate}
+					\item 报文序列:需要保持数据边界
+					\item 字节流:无需保持数据边界
+				\end{enumerate}
+			\end{itemize}
+			\item 无连接服务
+			\begin{itemize}
+				\item 有确认:能确定是否发送成功
+				\item 无确认:不确定
+			\end{itemize}
+			\item 如何使用下层服务
+			\begin{itemize}
+				\item 原语:上下两层的通信方式
+				\item 参数:用来传递数据和控制信息
+				\begin{enumerate}
+					\item Request:服务使用者要求服务
+					\item Indication:提供者通知发生了某事
+					\item Response:使用者回应该事件
+					\item Confirm:提供者响应事件
+				\end{enumerate}
+				\item 无确定则没有Response \& Confirm
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+	\item 服务和协议完全分离
+	\begin{itemize}
+		\item 服务是上下关系
+		\item 协议是水平关系
+	\end{itemize}
+\end{itemize}
+
+\section{标准化及其组织}
+\begin{itemize}
+	\item 好处
+	\begin{itemize}
+		\item 保证软件有市场
+		\item 各个厂商的产品可以互通
+		\item 用户的选择比较灵活
+	\end{itemize}
+	\item 坏处
+	\begin{itemize}
+		\item 不利于创新
+		\item 标准化需要过程,标准颁布的时候可能已经落后
+	\end{itemize}
+	\item 标准化组织
+	\begin{itemize}
+		\item CCITT
+		\item ISO
+		\item ANSI
+		\item IEEE
+	\end{itemize}
+	\item 标准制定的最佳时机:研究和投资之间
+\end{itemize}
+
+\section{TCP/IP}
+\begin{itemize}
+	\item 目标
+	\begin{itemize}
+		\item 无缝连接多个网络
+		\item 保护子网硬件
+		\item 灵活的体系结构
+		\item 网络故障不能影响两端的连接
+	\end{itemize}
+	\item 主机-网络层(802.3, 802.11)
+	\begin{itemize}
+		\item 端系统和网络之间数据交换
+		\item 特定软件取决于所用的网络类型
+		\item 将网络访问功能单独隔离成一个层次
+		\item 网络访问层上的通信软件不必关心所用的网络类型
+	\end{itemize}
+	\item 网络互联层(IP)
+	\begin{itemize}
+		\item 存储-转发技术
+		\item Best-effort
+	\end{itemize}
+	\item 传输层(TCP, UDP)
+	\begin{itemize}
+		\item 提供端-端数据传送服务,隐藏底层网络细节
+	\end{itemize}
+	\item 应用层
+	\begin{itemize}
+		\item 虚拟终端TELNET服务
+		\item 文件传输协议FTP
+		\item 简单邮件传输协议SMTP
+		\item 域名服务DNS
+		\item 网络新闻传输协议NNTP
+		\item 超文本传输协议HTTP
+	\end{itemize}
+	\item 优点
+	\begin{itemize}
+		\item 有详细说明,使用广泛
+		\item 得到了美国国防部DoD支持
+		\item Internet建立在TCP/IP基础上,加强了TCP/IP
+	\end{itemize}
+	\item 缺点
+	\begin{itemize}
+		\item 很多协议难以替换
+		\item 不区分物理层和数据链路层
+		\item 缺乏通用性
+		\item 没有明确划分服务,接口和协议
+	\end{itemize}
+\end{itemize}
+
+\end{CJK*}
+\end{document}

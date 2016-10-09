@@ -1,0 +1,174 @@
+\documentclass[a4paper,12pt,notitlepage]{article}
+
+\usepackage{CJKutf8}
+\usepackage{indentfirst}
+
+\setlength{\parindent}{2em} 
+
+\begin{CJK*}{UTF8}{gbsn}
+\begin{document}
+
+\title{ICN\ 02\ 计算机网络分类与交换技术}
+\author{整理:hiaoxui}
+\maketitle
+
+\section{计算机网络的定义}
+
+\begin{itemize}
+	\item 若干地理上分散的,具有独立功能的计算机系统利用何种通信系统连接而成的计算机系统集合
+	\item 元素
+	\begin{enumerate}
+		\item 主机
+		\item 通信链路
+		\item 交换节点
+		\item 拓扑结构
+		\item 通信软件
+	\end{enumerate}
+\end{itemize} 
+
+\section{网络规模}
+\begin{itemize}
+	\item 个域网(PAN)
+	\begin{itemize}
+		\item 围绕着一个人进行通信
+		\item 一个节点作为主设备链接很多设备
+	\end{itemize}
+	\item 局域网(LAN)
+	\begin{itemize}
+		\item 一个办公室到一个企业大小
+		\item 分为有线局域网和无线局域网
+	\end{itemize}
+	\item 城域网(MAN)
+	\begin{itemize}
+		\item 一座城市
+		\item 如有线电视节目和WiMAX
+	\end{itemize}
+	\item 广域网(WAN)
+	\begin{itemize}
+		\item 可达数百公里或数千公里
+		\item 卫星网络或者蜂窝电话
+	\end{itemize}
+	\item 计算机网络和分布式系统
+	\begin{itemize}
+		\item 分布式系统:多台独立自主的计算机的存在对用户而言是透明的
+		\item 共同点
+		\begin{itemize}
+			\item 二者都要在系统内对文件进行调度
+			\item 分布式是网络的一个特例
+		\end{itemize}
+		\item 不同点
+		\begin{itemize}
+			\item 分布式是透明的
+			\item 分布式系统负责作业的分配和协调,相关数据的管理,整个系统的管理
+			\item 不同点主要在OS上
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\section{传输技术}
+\begin{itemize}
+	\item 广播网络
+	\begin{itemize}
+		\item 广播网络只有一个信道,网络上所有节点共享一个信道
+		\item 单播
+		\begin{itemize}
+			\item 一对一
+			\item 即使消息已经被接收,依然要走遍整个网络
+			\item 每个节点都有自己的ID,发消息要指定ID,接收也要检查ID
+		\end{itemize}
+		\item 广播
+		\begin{itemize}
+			\item 一对全部
+			\item 需要标识自己的ID,要有标识全体的ID
+		\end{itemize}
+		\item 组播
+		\begin{itemize}
+			\item 一对一组
+			\item 标识自己的ID+标识某一组的ID
+		\end{itemize}
+		\item 信道分配:介质访问控制(MAC)
+		\begin{itemize}
+			\item 静态分配
+			\begin{itemize}
+				\item 效率低,但算法简单
+			\end{itemize}
+			\item 动态分配
+			\begin{itemize}
+				\item 按需分配,效率高,但是算法复杂
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+	\item 点点网络
+	\begin{itemize}
+		\item 由许多一对对计算机之间的链路组成
+		\item 多跳传输:消息的传递需要借助其他节点辅助
+	\end{itemize}
+	\item 二者的选择
+	\begin{itemize}
+		\item 小型,相对集中选择广播
+		\item 大型,相对分散选择点点网络
+	\end{itemize}
+\end{itemize}
+
+\section{交换技术}
+\begin{itemize}
+	\item 交换技术的特点
+	\begin{itemize}
+		\item 主叫方,被叫方需要建立专用线路
+		\item 该电路需保持联通,不为他人所用
+	\end{itemize}
+	\item 电路交换技术
+	\begin{itemize}
+		\item 建立电路,保持联通,不能被他人使用
+		\item 需要考虑如何复用高容量电路
+		\item 计算题:建立时间+传输时间
+		\item 优点
+		\begin{itemize}
+			\item 实时性好
+			\item 稳定的数据传输速率
+			\item 不存在信道访问延迟
+		\end{itemize}
+		\item 缺点
+		\begin{itemize}
+			\item 不能充分发挥传输介质的潜力
+			\item 长距离传输建立时间长
+			\item 扩展性差
+		\end{itemize}
+	\end{itemize}
+	\item 存储-转发技术
+	\begin{itemize}
+		\item 交换节点接受并存储包,然后根据目的地转发包
+		\item 报文和数据包
+		\begin{itemize}
+			\item 报文:完整信息
+			\item 包:数据块大小固定
+			\item 时延计算:处理时延+排队时延+传输时延
+		\end{itemize}
+		\item 优点
+		\begin{itemize}
+			\item 将数据分流到不同路径,提高带宽利用率
+			\item 如果链路出现故障,可以将其旁路
+		\end{itemize}
+		\item 缺点
+		\begin{itemize}
+			\item 存储-转发延迟,排队延迟
+			\item 包丢失
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\section{传输速率}
+\begin{itemize}
+	\item 带宽/吞吐量:信号具有的频带宽度,单位是Hz
+	\item 数据率/比特率:bps
+	\item 延迟:一个报文/包从一个网络一端传到另一端的时间
+	\item 发送时延:数据块进入介质花的时间
+	\item 传播延迟:在信道中传播一定距离花费的时间
+	\item 处理时延:存储转发所花的时间
+	\item 丢包率
+	\item 吞吐量:发送者和接受者传输数据的比特率
+	\item 瓶颈链路:制约端-端吞吐量的链路
+\end{itemize}
+
+\end{CJK*}
+\end{document}

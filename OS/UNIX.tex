@@ -1,0 +1,264 @@
+% homework
+% 20161007
+% by hiaoxui
+
+\documentclass[a4paper,12pt,notitlepage]{article}
+
+\usepackage{CJKutf8}
+\usepackage{indentfirst}
+
+\setlength{\parindent}{2em} 
+
+\begin{CJK*}{UTF8}{gbsn}
+\begin{document}
+
+\title{UNIX演变过程}
+\author{整理:hiaoxui}
+\maketitle
+
+\section{综述}
+	Unix的前身为Multics,贝尔实验室参与了这个操作系统的研发,但因为开发速度太慢,贝尔实验室决定放弃这个计划.贝尔实验室的工程师,汤普逊和里奇,在此时自行开发了Unix. \\
+
+	此后的10年,Unix在学术机构和大型企业中得到了广泛的应用,当时的UNIX拥有者AT \& T公司以低廉甚至免费的许可将Unix源码授权给学术机构做研究或教学之用,许多机构在此源码基础上加以扩充和改进,形成了所谓的“Unix变种”,这些变种反过来也促进了Unix的发展,其中最著名的变种之一是由加州大学柏克莱分校开发的柏克莱软件包(BSD)产品. \\
+	
+\section{FreeBSD}
+
+	FreeBSD起源于加州大学伯克利分校.该校学生从AT \& T获取了Unix的源代码许可证.学生们开始修改和改进AT \& T Unix并且为其修改后的版本命名为Berkeley Unix或BSD,它实现了诸如TCP/IP,虚拟内存和Unix文件系统等功能.BSD项目在1976年由Bill Joy发起.但由于BSD含有从AT \& T Unix中继承过来的源码,在使用BSD之前,参与者必须得到AT \& T Unix的许可证. \\
+
+	1989年六月,“Networking Release 1（网络版1）”或简写为Net-1-BSD的首个公众版本发布了.发布Net-1之后,BSD的开发者Keith Bostic,建议用可自由再发行代码替换掉原始BSD许可证下的所有AT \& T的代码.AT \& T代码的替换工作开始了,18月后,绝大多数AT \& T代码已经替换完毕.然而,内核中仍然留存着六个包含AT \& T代码的文件.BSD开发者们决定发布不含有这六个文件的“Networking Release 2（网络版2）”.Net-2在1991年发行. \\
+	
+	1992年,NET-2发布几个月后,William Jolitz和Lynne Jolitz,为那六个缺失的文件编写了替代品,将BSD移植到英特尔80386微处理器上,并把他们的新操作系统叫做386BSD .他们通过一个匿名FTP服务器发布了386BSD.386BSD的开发进度缓慢,并且在搁置了一段时间之后,一个386BSD的用户团体自行分支出来创建了FreeBSD,这样他们就可以对系统做出及时更新.FreeBSD的首个版本在1993年11月发布. \\
+	
+\subsection{FreeBSD 4}
+
+	4.0-RELEASE于2000年3月发行,最后一个版本4.11-RELEASE于2005年1月发行,并支持到2007年1月.FreeBSD 4也是FreeBSD最长寿的主版本.在FreeBSD 4所发展出来的kqueue也被移植到各种不同BSD平台. \\
+	
+\subsection{FreeBSD 5}
+
+	最后一个版本的FreeBSD 5是5.5,是在2006年五月发行的. \\
+
+	在FreeBSD 4的SMP架构下,在同一时间内只允许一个CPU进入核心（即Giant Lock）,FreeBSD 5最大的改变在于改善底层核心Locking机制,审视并改写核心程序代码,使得不同的CPU可以同时进入系统核心,藉以增加效率. \\
+
+	另外一个重大的改变在于自5.3开始支持m:n线程的KSE（Kernel Scheduled Entities）,表示m个用户线程共享n个核心线程的模式. \\
+
+	这个版本的许多贡献是由于商业化版本的BSD OS团队的支持. \\
+	
+
+\subsection{FreeBSD 6}
+	
+	FreeBSD 6为一个-STABLE发展版本,FreeBSD 6.3在2008年1月18日发行,这个版本主要针对软件的更新,并加入lagg（可以对多张网卡操作）的支持,并引入重新改写的unionfs.FreeBSD 6.4在2008年11月28日发行. \\	
+	
+\subsection{FreeBSD 7}
+
+	FreeBSD 7为目前第二个-STABLE发展版本,在2007年6月19日进入发行程序,2008年2月27日7.0-RELEASE正式发布.2010年3月23日FreeBSD 7.3-RELEASE正式发布.新增的功能包括了： \\
+
+\begin{itemize}
+    \item SCTP（实做完成）
+    \item 日志式UFS文件系统：gjournal（实做完成）
+    \item 移植升阳所发展的DTrace（实做完成,但还未交付至CVS）
+    \item 移植升阳所发展的ZFS文件系统（实做完成）
+    \item 使用GCC4（移植完成,目前为4.2.1）
+    \item 对ARM与MIPS平台的支持
+    \item 重写过的USB stack（实做完成,但还未交付至CVS）
+    \item Scalable concurrent malloc实做
+    \item ULE调度表2.0（SCHED \_ ULE,实做完成）,并修改加强为SCHED\_ SMP（实做完成）,在交付至CVS时的正式名称为ULE 3.0,这个版本在8核心的机器上以sysbench MySQL测试的结果,速度上比Linux 2.6快大约10 \%（无论是使用Google的tcmalloc或是glibc+cfs)
+    \item Linux 2.6模拟层（已经可以使用）
+    \item Camellia Block Cipher
+    \item FS的运行
+\end{itemize}
+
+\subsection{FreeBSD 8}
+
+\begin{itemize}
+    \item 虚拟化方面：Xen DOM-U、VirtualBox guest及host支持、层次式jail.
+    \item NFS：对NFSv3 GSSAPI的支持,以及试验性的NFSv4客户端和服务器.
+    \item 802.11s D3.03 wireless mesh网络,以及虚拟Access Point支持.
+    \item ZFS不再是试验性的了.
+    \item 基于Juniper Networks提供MIPS处理器的实验性支持.
+    \item SMP扩展性的增强,显着改善在16核心处理器系统中的性能.
+    \item VFS加锁的重新实现,显着改善文件系统的可扩展性.
+    \item 显着缓解缓冲区溢出和内核空指针问题.
+    \item 可扩展的内核安全框架（MAC Framework）现已正式可用.
+    \item 完全更新的USB堆栈改善了性能和设备兼容性,增加了USB target模式.
+\end{itemize}
+
+\subsection{FreeBSD 9}
+
+reeBSD 9.0于2012年1月发布,该版本是第一个9.x的FreeBSD稳定分支.该版本具有以下特性： \\
+
+\begin{itemize}
+    \item 采用了新的安装程序bsdinstall
+    \item ZFS和NFS文件系统得到改进
+    \item 升级了ATA/SATA驱动并支持AHCI
+    \item 采用LLVM/Clang代替GCC
+    \item 高效的SSH（HPN-SSH）
+    \item PowerPC版支持索尼的PS3
+\end{itemize}
+
+\subsection{FreeBSD 10}
+
+	FreeBSD 10.0于2014年1月发布,这一版本包含的重要改进包括 \\
+	
+\begin{itemize}
+	
+    \item 在支持的平台上, clang(1) 替换 GCC 成为了默认的系统编译器.
+    \item 系统中引入了 Unbound 作为本地的缓存 DNS 服务器.
+    \item 基本系统中删除了 BIND.
+    \item 使用来自 NetBSD 的 bmake(1) 替换了原有的 make(1).
+    \item 使用了新的 pkg(7) 作为包管理工具.
+    \item 删去了旧式的包管理工具 pkg\ add(1)、 pkg\ delete(1), 及其相关工具.
+    \item 对虚拟化支持进行了大幅强化,新增了 bhyve(8) 虚拟机,以及 virtio(4) 和对微软 Hyper-V 的原生半虚拟化支持.
+    \item 为 ZFS 添加了用于 SSD 的 TRIM 支持.
+    \item 为 ZFS 添加了高性能的 LZ4 压缩算法支持.
+
+\end{itemize}
+	
+\section{OpenBSD}
+
+	OpenBSD是一个类Unix计算机操作系统,是加州大学伯克利分校所开发的Unix衍生系统伯克利软件套件（BSD）的一个后继者.它是在1995年尾由项目领导者西奥·德·若特从NetBSD分支而出.除了操作系统,OpenBSD项目已为众多子系统编写了可移植版本,其中最值得注意的是PF、OpenSSH和OpenNTPD,作为软件包,它们在其他操作系统中随处可见. \\
+	
+	OpenBSD计划维护着20种不同硬件平台的移植版,包括DEC Alpha、英特尔i386、惠普PA-RISC、x86-64及摩托罗拉 68000处理器、苹果PowerPC、Sun SPARC和SPARC64计算机和Sharp Zaurus[1].OpenBSD基金会被接纳为2014年Google编程之夏的指导组织. \\
+	
+\section{NetBSD}
+
+	NetBSD是一份免费,安全的具有高度可定制性的类Unix操作系统,适于多种平台,从64位AMD Athlon服务器和桌面系统到手持设备和嵌入式设备.它设计简洁,代码规范,拥有众多先进特性,使得它在业界和学术界广受好评,用户可以通过完整的源代码获得支持.许多程序都可以很容易地通过NetBSD Packages Collection获得. \\
+	
+	作为该项目的口号（“Of course it runs NetBSD”）表明,NetBSD已移植到了大量的32 -和64位体系结构.从VAX小型机Pocket PC掌上电脑,甚至还支持Dreamcast游戏机.从2009年起,NetBSD支持57个硬件平台（横跨15个不同的处理器架构）.NetBSD的发行版比任何单一的GNU / Linux发行版支持更多的平台.这些平台的内核和用户空间都是由中央统一管理的CVS源代码树.目前,不像其他的内核,如μCLinux,NetBSD内核在任何给定的目标架构需要MMU的存在. \\
+	
+	\textbf{以下是我从其更新日志中找到一些关于操作系统发展和计算机硬件发展的内容}
+
+\subsection{NetBSD 0.8}
+
+	第一次正式发布,源于386BSD 0.1加版本0.2.2非官方的补丁包,从Net / 2的发布,从386BSD重新整合,以及其他各种改进丢失的方案. \\
+	
+	支持可装载内核模块（LKM）. 
+
+\subsection{NetBSD 1.x}
+
+	第一个多平台版本,支持PC,HP 9000系列300,Amiga的,68K的Macintosh,sun-4C系列和PC532 . \\
+	
+	加入共享库和Kerberos\\
+
+\subsection{NetBSD 2.x}
+
+	支持NFSv3中 , SCSI扫描仪和介质更换设备的增加. \\
+	
+	NTP 锁相环加入内核.\\
+
+\subsection{NetBSD 2.x}
+
+	支持ISA即插即用,PCMCIA,加入ATAPI和APM. \\
+	
+	ext2fs的和FAT32文件系统的加入 \\
+	
+	XFree86的源代码被加入发行版本. \\
+
+\subsection{NetBSD 3.x}
+
+	添加了完整的USB支持. \\
+	
+	所有剩余的4.4BSD精简版-2内核改进整合的完成 \\
+	
+	引入了UVM,重写虚拟内存子系统 \\
+
+\subsection{NetBSD 4.x}
+
+	加入了OpenSSL和OpenSSH的接口 \\
+
+\subsection{NetBSD 5.x}
+
+	统一缓冲区高速缓存(UBC)被引入,它统一了文件数据的文件系统和虚拟内存高速缓存. \\
+	
+	支持十大新平台 \\
+	
+	增加了对多字节LC\_ CTYPE支持的语言环境 . \\
+
+\subsection{NetBSD 6.x}
+
+	支持线程本地存储 , 逻辑卷管理器功能 \\
+
+	改写磁盘配额子系统 \\
+	
+	改进SMP上的PowerPC端口,增加了Book电子飞思卡尔MPC85XX（e500内核）处理器的支持 \\	
+	
+\subsection{NetBSD 7.x}
+
+	关于AMD64架构多达256个CPU的支持 \\
+	
+	多处理器支持ARM \\
+	
+	通过Linux 3.15 DRM / KMS代码的某个端口添加在x86现代英特尔和Radeon设备加速的支持. \\
+
+
+\section{Linux}
+
+	Linux是一种自由和开放源代码的类UNIX操作系统.该操作系统的内核由林纳斯·托瓦兹在1991年10月5日首次发布,在加上用户空间的应用程序之后,成为Linux操作系统.Linux也是自由软件和开放源代码软件发展中最著名的例子.只要遵循GNU通用公共许可证,任何个人和机构都可以自由地使用Linux的所有底层源代码,也可以自由地修改和再发布.大多数Linux系统还包括像提供GUI的X Window之类的程序.除了一部分专家之外,大多数人都是直接使用Linux发行版,而不是自己选择每一样组件或自行设置. \\
+	
+	\textbf{以下是我整理的一些Linux系统关于操作系统技术进步和计算机硬件技术进步的演变史} \\
+	
+\subsection{Linux}
+			
+	有176,250字符串.此版本的Linux内核只支持单处理器基于i386的计算机系统,可移植性成为一个问题.随后1.2版（310,950字符串）支持多种计算机架构例如Alpha、SPARC、MIPS处理器. \\
+		
+\subsection{Linux 3.5}
+	
+	CoDel队列管理算法 \\
+	
+	连续性内存分配器 \\
+	
+	ext4文件系统加入元数据校验和 \\	
+	
+\subsection{Linux 3.8}
+
+	支持64位ARMv8/AArch64 \\
+	
+	核心内存使用审计和关联使用率限制 \\
+	
+	放弃支持旧的i386处理器,减少内核复杂度 \\
+	
+\subsection{Linux 3.10}
+
+	完整支持DynTicks（动态定时器）,并成为内核级别的核心特性 \\
+	
+	BCache固态硬盘/机械硬盘缓存框架已经可用,使用两种硬盘的系统将会大大提速 \\
+	
+	大量的Linux加密子系统优化 \\
+	
+\subsection{Linux 3.12}
+
+	优化了CPU频率管理器,更有效的实现动态调频功能,间接提升了部分开源和闭源驱动的性能 \\
+	
+	ext4文件系统加入两个新功能：支持主动extent缓存,减少主读工作负荷的内存使用,改进异步I/O \\
+	
+\subsection{Linux 3.14}
+
+	支持MIPS最新的CPU核心支持 \\
+	
+	经由新的驱动程序支持AMD加密协作处理器 \\
+	
+	通用CPU加速 \\
+	
+\subsection{Linux 4.2}
+
+	Skylake架构处理更好的支持 \\
+	
+	ext4支持文件系统层级的加密 \\
+	
+	大量的ARM架构改进 \\
+	
+\subsection{Linux 4.7}
+
+	新增schedutil频率控制器,CPUFreq动态频率缩放子系统速度更快、更精准 \\
+	
+\subsection{Linux 4.8}
+
+	改进高性能网络路由. \\
+	
+	创建核心时允许使用GCC plugins. \\
+	
+	支持Microsoft Surface 3触屏 \\
+	
+	从技术上说Linux只是一个内核.“内核”指的是一个提供硬件抽象层、磁盘及文件系统控制、多任务等功能的系统软件.一个内核并不是一套完整的操作系统.有一套基于Linux内核的完整操作系统叫作Linux操作系统,或是GNU/Linux（在该系统中包含了很多GNU计划的系统组件）.常见的Linux发行版本有Ubuntu,CentOS,Arch等等. \\
+
+\end{CJK*}
+\end{document}
