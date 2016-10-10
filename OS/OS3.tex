@@ -1,0 +1,275 @@
+\documentclass[a4paper,12pt,notitlepage]{article}
+
+\usepackage{CJKutf8}
+\usepackage{indentfirst}
+
+\setlength{\parindent}{2em} 
+
+\begin{CJK*}{UTF8}{gbsn}
+\begin{document}
+
+\title{操作系统\ 03\ 进程管理/进程管理}
+\author{整理:hiaoxui}
+\maketitle
+
+\section{多道程序的设计}
+\begin{itemize}
+	\item 顺序程序
+	\begin{itemize}
+		\item 程序:指令或者语句序列,体现了某种算法,程序是有顺序的
+		\item 程序执行有两种:顺序执行和并发执行
+		\item 顺序环境:计算机系统中只有一个程序,独占所有资源,其执行不受外界影响
+		\item 特性
+		\begin{itemize}
+			\item 顺序性
+			\item 封闭性
+			\item 确定性
+			\item 可再现性
+		\end{itemize}
+	\end{itemize}
+	\item 并发程序
+	\begin{itemize}
+		\item 在一定时间内物理机器上多个程序在计算机系统中,次序没有事先确定
+		\item 特征
+		\begin{itemize}
+			\item 结果不可再现
+			\item 程序的执行是间断性的
+			\item 资源共享(不再封闭)
+			\item 特立性和制约性
+			\item 程序和计算不再一一对应
+		\end{itemize}
+		\item 读写集
+		\begin{itemize}
+			\item 读集R
+			\item 写集W
+		\end{itemize}
+		\item Bernstein并发执行条件(封闭性,可再现性)
+		\begin{itemize}
+			\item i的R和j的W无交集
+			\item i的W和j的R无交集
+			\item i的W和j的W无交集
+		\end{itemize}
+		\item 引入并发的目的:提高资源利用率,提高系统效率
+	\end{itemize}
+	\item 多道程序
+	\begin{itemize}
+		\item 允许多个程序同时进入内存
+		\item 目的:提高系统效率
+		\item 设计的环境特点
+		\begin{itemize}
+			\item 独立性
+			\item 随机性
+			\item 资源共享性
+		\end{itemize}
+		\item 缺陷
+		\begin{itemize}
+			\item 可能延长程序的执行的时间
+			\item 效率提高是有限度的
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\section{进程}
+\begin{itemize}
+	\item 进程的概念
+	\begin{itemize}
+		\item 理论角度:程序活动的规律
+		\item 实现角度:数据结构,可以清晰刻画动态系统的内在规律,有效管理和调度进入OS主存储器运行的程序
+	\end{itemize}
+	\item 为什么引入进程
+	\begin{itemize}
+		\item 刻画系统的动态性,进程有动态性和暂时性
+		\item 解决共享性,描述程序的执行状态
+	\end{itemize}
+	\item 进程的定义
+	\begin{itemize}
+		\item 进程是一个 可并发执行 的具有独立功能的程序关于某个数据集合的一次执行过程 ,也是操作系统进行资源分配 和保护的基本单位
+		\item 它对应虚拟处理机,虚拟存储器,虚拟外设等资源的分配和回收
+		\item 进程包含了正在运行一个程序的所有状态信息
+	\end{itemize}
+	\item 进程的创建
+	\begin{itemize}
+		\item 系统初始化
+		\item 执行进程创立程序
+		\item 用户请求创立新进程
+	\end{itemize}
+	\item 进程消亡事件
+	\begin{itemize}
+		\item 正常退出
+		\item 发生错误,退出
+		\item 被其他进程kill
+		\item 进程因为异常而强行终结
+	\end{itemize}
+	\item 进程分类
+	\begin{itemize}
+		\item 系统进程
+		\item 用户进程
+		\item 系统进程优先于用户进程(如可以kill用户进程)
+	\end{itemize}
+	\item 进程和程序的联系
+	\begin{itemize}
+		\item 程序是进程的组成部分,进程=程序+数据+进程控制块
+		\item 通过多次执行,一个程序可以对应多个进程;通过调用,一个进程可以对应多个程序
+	\end{itemize}
+	\item 进程和程序的区别
+	\begin{itemize}
+		\item 进程更能真实地描述并发,而程序不能
+		\item 进程是由程序和数据两部分组成的
+		\item 程序是静态的,进程是动态的
+		\item 进程有生命周期,有诞生有消亡,短暂的;而程序是相对长久的
+		\item 一个程序可对应多个进程,反之亦然
+		\item 进程具有创建其他进程的功能,而程序没有
+	\end{itemize}
+	\item 进程的属性
+	\begin{itemize}
+		\item 进程是一个可以拥有资源的独立单位
+		\item 可以独立调度和分派的基本单位
+	\end{itemize}
+	\item 地址空间
+	\begin{itemize}
+		\item 进程要用的所有资源
+	\end{itemize}
+	\item 特征
+	\begin{itemize}
+		\item 并发性
+		\item 动态性
+		\item 独立性
+		\item 交往性
+		\item 异步性
+		\item 制约性
+		\item 共享性
+	\end{itemize}
+	\item 缺陷
+	\begin{itemize}
+		\item 在一个时间只能做一件事情
+		\item 进程如果被阻塞,则整个进程都会被阻塞
+	\end{itemize}
+	\item 进程的状态
+	\begin{itemize}
+		\item 运行态Running
+		\item 就绪态Ready:等待CPU空闲
+		\item 等待态Blocked
+		\item 状态转换:对用户而言是透明的
+		\begin{itemize}
+			\item Ready$->$Running
+			\item Running$->$Ready
+			\item Running$->$Blocked
+			\item Blocked$->$Ready
+		\end{itemize}
+		\item 创建态:构造了进程标识符和管理进程所需的表格,但是资源有限,尚未允许执行该进程
+		\begin{itemize}
+			\item UNIX:fork
+			\item Windows:CreateProcess
+		\end{itemize}
+		\item 终止态
+		\item 挂起态
+		\item 五状态模型
+		\begin{itemize}
+			\item 新状态,终止态,运行态,就绪态,等待态
+		\end{itemize}
+		\item 七状态模型(双挂起模型)
+		\begin{itemize}
+			\item 挂起状态:进入外存
+			\item New; Ready, Suspend; Ready; Running; Blocked; Blocked, Suspend; Exit
+			\item 引入了进程优先级, 提高了处理效率, 可以提供足够内存, 可以用于调试
+			\item 单挂起模型:没有Ready, Suspend
+		\end{itemize}
+	\end{itemize}
+	\item 进程控制块PCB
+	\begin{itemize}
+		\item 系统为了管理进程设置的一个数据结构,记录进程的外部特征,描述进程的运动变化过程
+		\item 系统利用PCB来控制和管理进程
+		\item 内容
+		\begin{itemize}
+			\item 调度信息:描述进程当前状态
+			\begin{itemize}
+				\item 进程名、进程号
+				\item 存储信息
+				\item 优先级
+				\item 当前状态
+				\item 资源清单
+				\item "家族关系"
+				\item 消息队列指针
+				\item 进程队列指针
+				\item 当前打开文件
+			\end{itemize}
+			\item 现场信息:进程运行情况
+		\end{itemize}
+	\end{itemize}
+	\item 进程的内存映像
+	\begin{itemize}
+		\item OS把进程物理实体和支持进程运行的环境合成进程运行的上下文,分为3部分
+		\begin{itemize}
+			\item 用户级上下文
+			\item 系统级上下文
+			\item 寄存器上下文
+		\end{itemize}
+		\item 内存的内存映像
+		\begin{itemize}
+			\item 进程程序块
+			\item 进程数据块
+			\item 系统/用户栈
+			\item 进程控制块
+		\end{itemize}
+	\end{itemize}
+	\item 系统用PCB来描述进程的基本情况以及运行变化的过程,PCB是进程存在的唯一标志。
+	\begin{itemize}
+		\item 进程创建:为进程生成一个PCB
+		\item 进程终止:回收它的PCB
+		\item 进程的组织管理:通过对PCB的组织管理来实现
+	\end{itemize}
+	\item PCB的组织
+	\begin{itemize}
+		\item 线性方式
+		\begin{itemize}
+			\item 优点:简单,不需要额外开销
+			\item 缺点:需要扫描整个PCB表才能找到所要的PCB
+			\item 适合进程不多的系统
+		\end{itemize}
+		\item 索引方式
+		\begin{itemize}
+			\item 设置就绪索引表,等待索引表
+			\item 三个指针:就绪索引表指针,等待索引表指针,执行态PCB在PCB表中的位置
+		\end{itemize}
+		\item 链接方式
+		\begin{itemize}
+			\item 具有相同状态的状态的PCB建立一个队列
+			\item 链接字:指出本队列下一PCB在PCB表中的编号
+		\end{itemie}
+	\end{itemize}
+	\item 进程队列:系统将所有进程的PCB排成若干队列进行管理
+	\begin{itemize}
+		\item 就绪队列
+		\item 等待队列
+		\item 运行队列
+		\item 进程队列的运行方式:见PPT
+		\item 进程队列的两种实现方式:
+		\begin{itemize}
+			\item 单向链接
+			\item 双向链接
+		\end{itemize}
+		\item 操作
+		\begin{itemize}
+			\item 入队,出队,插队,队列管理
+		\end{itemize}
+		\item 进程控制
+		\begin{itemize}
+			\item 原语:由若干条指令所组成的指令序列,来实现某个特定的操作功能
+			\begin{itemize}
+				\item 指令序列的操作是连续的,不可分割
+				\item 是OS的核心组成部分
+				\item 只能在管态下执行,常驻内存
+			\end{itemize}
+			\item 原语的类型
+			\begin{itemize}
+				\item 创建原语:创建一个进程并建立其PCB
+				\item 撤消原语:进程完成后,撤销PCB
+				\item 阻塞原语:把进程从运行态转换为阻塞状态
+				\item 唤醒原语:把等待状态的进程转换成就绪状态
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\end{CJK*}
+\end{document}
