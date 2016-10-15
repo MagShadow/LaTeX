@@ -1,0 +1,161 @@
+\documentclass[a4paper,12pt,notitlepage]{article}
+\usepackage{CJKutf8}
+\usepackage{indentfirst}
+
+\setlength{\parindent}{2em} 
+
+\begin{CJK*}{UTF8}{gbsn}
+\begin{document}
+
+\title{ICN\ 05\ 传输介质和多路复用}
+\author{整理:hiaoxui}
+\maketitle
+
+\section{传输介质} 
+
+\begin{itemize}
+	\item 传输介质分类
+	\begin{itemize}
+		\item 引导性介质:有线
+		\begin{itemize}
+			\item 沿着固态介质传播
+		\end{itemize}
+		\item 非引导性介质:无线
+		\begin{itemize}
+			\item 信号没有固定传播路径
+		\end{itemize}
+		\item 保真度:收到的信号和发出的信号之间的差异
+	\end{itemize}
+	\item 引导性传输介质
+	\begin{itemize}
+		\item 双绞线
+		\begin{itemize}
+			\item 非屏蔽双绞线UTP:1-6类
+			\item 屏蔽双绞线STP:7类
+			\item 接法
+			\begin{itemize}
+				\item 直连
+				\item 交叉互连
+			\end{itemize}
+		\end{itemize}
+		\item 同轴电缆
+		\begin{itemize}
+			\item 两种导体共享一根中心轴
+			\item 结构
+			\begin{itemize}
+				\item 铜芯
+				\item 绝缘层
+				\item 屏蔽层
+				\item 塑料外套
+			\end{itemize}
+			\item 分类
+			\begin{itemize}
+				\item 基带传输:50$\Omega$
+				\item 宽带传输:75$\Omega$
+			\end{itemize}
+		\end{itemize}
+		\item 光纤
+		\begin{itemize}
+			\item 核芯-封套-塑料外套
+			\item 单模光纤:一条线缆只有一条光纤
+			\item 多模光纤:数条光纤以不同角度反射传播(不能太远)
+		\end{itemize}
+		\item 电力线
+		\begin{itemize}
+			\item 利用电缆进行网络通信
+			\item 速度200Mbps,采用OFDM技术,主要用于智能家电
+		\end{itemize}
+	\end{itemize}
+	\item 非引导性介质
+	\begin{itemize}
+		\item 无线电:10k-1GHz之间
+		\begin{itemize}
+			\item 能穿透墙壁
+			\item 不受雨雪
+			\item 可以全方位传播,也可以定向传播
+		\end{itemize}
+		\item 微波:GHz级别
+		\begin{itemize}
+			\item 地面系统:定向抛物线在较低的GHz范围内收发信号
+			\item 卫星微波系统:在定向抛物线和天线之间传输信号(中转)
+		\end{itemize}
+		\item 红外线:THz级别
+		\begin{itemize}
+			\item 发光二极管或激光二极管发射信号,光电管接收信号
+			\item 点-点:光束高度集中,朝特定方向发射
+			\item 广播
+			\item 不能穿透墙壁,容易收到强光干扰
+		\end{itemize}
+		\item 可见光
+		\begin{itemize}
+			\item LED和显示屏,照明光源
+			\item LiFi
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\section{多路复用}
+\begin{itemize}
+	\item 复用器:将来自n条输入线的数据结合在一起,发送到一条高容量数据链路
+	\item 分用器:接受复用的数据流,按照信道将数据解复用,传输到相应的输出线路
+	\item 复用:为了提高信道利用率,使多路信号沿同一信道传输而互不干扰的技术
+	\item 分割信号的依据:信号之间的差别
+	\begin{itemize}
+		\item 信号频率不同:频分多路复用(联通)
+		\item 信号出现时间不同:时分多路复用(移动)
+		\item 信号码型结构不同:码分多路复用
+	\end{itemize}
+	\item 频分多路复用(FDMA)
+	\begin{itemize}
+		\item 每个信号被调制到不同频率的载波上
+		\item 子载波$->$FDM$->$传播$->$接收器$->$带通滤波$->$解调器
+		\item 合成信号频段:子载波+频带
+		\item 波分复用(WDM):光的频分复用
+		\item 正交频分多路复用(OFDM
+		\begin{itemize}
+			\item 信号重迭但不会干扰
+			\item OFDM和FDM的区别
+			\begin{itemize}
+				\item OFDM彼此正交
+				\item FDM需要保护屏带,OFDM不需要,信号可以重迭
+			\end{itemize}
+		\end{itemize}
+		\item 如何实现频分多路复用
+		\begin{itemize}
+			\item MODEM技术
+			\begin{itemize}
+				\item 数字调制:只有模拟传输可以用的时候
+				\item 模拟调制:FDM进行频谱搬移
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+	\item 时分多路复用(TDMA, Time Division Multiplexing)
+	\begin{itemize}
+		\item 以时间作为分割信号的依据
+		\item 发送端和接收端:在TDM帧内依次扫描各个信号
+		\item 实质:利用每路信号之间的时间空隙传输其他信号
+		\item 实现的关键:收发端的旋转开关必须严格同步,必须同频同相
+		\item 当接入用户多的时候,每个用户的带宽会被压缩
+		\item PCM和TDM的结合,可以把多路电话复用在一条中继线上
+		\begin{itemize}
+			\item T1载波:1.544Mbps(24路电话,一帧125$\mu s$)
+			\item T2载波:6.312Mbps(4个T1)
+			\item T3载波:44.736Mbps(7个T2)
+			\item T4载波:274.176Mbps(6个T3)
+		\end{itemize}
+	\end{itemize}
+	\item 码分多路复用(CDMA)
+	\begin{itemize}
+		\item CDMA
+		\begin{itemize}
+			\item 每个站用整个频段发送信号
+			\item 多个站的信号可以线性叠加
+			\item 利用编码技术分离并发传输
+		\end{itemize}
+		\item 关键:接收端能正确取出期望信号,拒绝其他信号
+		\item CDMA:码片序列有正交性
+	\end{itemize}
+\end{itemize}
+
+\end{CJK*}
+\end{document}
