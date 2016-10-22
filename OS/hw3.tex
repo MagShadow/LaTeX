@@ -1,0 +1,177 @@
+\documentclass[a4paper,12pt,notitlepage]{article}
+\usepackage{CJKutf8}
+\usepackage{indentfirst}
+\usepackage{amsmath}
+
+\setlength{\parindent}{2em} 
+
+\begin{CJK*}{UTF8}{gbsn}
+\begin{document}
+
+\title{OS\ 第三次作业}
+\author{秦光辉\ 1500011398}
+\maketitle
+
+\section{司机和售票员问题}
+
+	S表示车门关好,初始值为0.D表示到站,初始值为1. \\
+
+	司机进程: \\
+	
+\begin{quote}
+	repeat:\\ 
+		P(S); \\
+		启动驾驶; \\
+		正常驾驶; \\
+		停车; \\
+		V(D); \\
+	until false;
+\end{quote}
+
+	售票员进程: \\
+	
+\begin{quote}
+	repeat: \\
+		关门; \\
+		V(S); \\
+		售票; \\
+		P(D); \\
+		开门; \\
+	until false; 
+\end{quote}
+
+\section{理发师问题}
+
+	chairs表示等候理发时的椅子,初始值为N.waiting表示等候的人的数量,初始值为0.empty表示理发椅上没人,初始值为1.full表示理发椅上有人,初始值为0.finish表示理发结束,初始值为0. \\
+	
+	理发师进程:
+
+\begin{quote}
+repeat: \\
+	睡觉; \\
+	P(waiting); (如果有顾客在等待,立刻醒过来) \\
+	P(full); (当顾客坐好后才能开始理发) \\
+	P(mutex1); (进程锁1,避免顾客还没坐好理发师就开始理发) \\
+	理发; \\
+	V(finish); (表示理发已经结束) \\
+	V(mutex1); \\
+until false;
+\end{quote}
+
+	顾客进程:
+	
+\begin{quote}
+repeat: \\
+	P(mutex2) (进程锁2,多个顾客可能同时进入理发店) \\
+	if(chairs == 0) (发现没有座位可以坐) \\
+	begin \\
+	离开 \\
+	end \\
+	else (当有座位的时候) \\
+	begin \\
+	V(waiting); (唤醒理发师) \\
+	P(chairs); (坐在等待座位上) \\
+	end \\
+	V(mutex2); \\
+	P(empty); (如果理发座位空出,则立刻占用该资源) \\
+	P(mutex1); (进程锁1,避免顾客还没坐好理发师就开始理发) \\
+	V(full); (告诉理发师可以开始理发) \\
+	坐在理发椅上; \\
+	V(chairs); (释放自己占用的等待座位) \\
+	V(mutex1); \\
+	P(finish); (如果理发已经结束) \\
+	V(empty); (表示理发的座位已经空出) \\
+	离开; \\
+until false;
+\end{quote}
+
+\section{物流系统问题}
+
+	check表示此时可以让货物进入检测中心,初始值为1.changjiang表示货物从长江一线运来,初始值为0.huhang表示货物从沪杭高速运来,初始值为0. \\
+	
+	检测中心的进程: \\
+	
+\begin{quote}
+	repeat: \\
+	P(check); \\
+	if(货物从长江一线运来) \\
+	begin \\
+	V(changjiang); \\
+	end \\
+	if(货物从沪杭高速运来) \\
+	begin \\
+	V(huhang) \\
+	end \\
+	until false;
+\end{quote}
+
+	吊装到上海至旧金山的定期集装箱班轮的机械:
+	
+\begin{quote}
+	repeat: \\
+	P(changjiang); \\
+	把货物吊装到上海至旧金山的定期集装箱班轮; \\
+	V(check); \\
+	until false;
+\end{quote}
+
+	吊装到上海至北京的运输车上的机械:
+	
+\begin{quote}
+	repeat: \\
+	P(huhang); \\
+	把货物吊装到上海至北京的货车上; \\
+	V(check); \\
+	until false;
+\end{quote}
+
+\section{第二类读者写者问题}
+
+	read$\_$count表示正在读的读者的数量,初始值为0.write$\_$count表示写者的数量,初始值为0.write表示允许写,初始值为1.read表示允许读,初始值为1. \\
+		
+	读者程序:
+	
+\begin{quote}
+repeat: \\
+	P(read); \\
+	P(mutex1); \\
+	V(read); \\
+	++read$\_$count; \\
+	if(read$\_$count == 1) \\
+	begin \\
+	P(write) \\
+	end \\
+	V(mutex1) \\
+	读 \\
+	P(mutex1) \\
+	- -read$\_$count; \\
+	if(read$\_$count == 0) \\
+	V(write); \\
+until false;
+\end{quote}
+
+	写者程序:
+	
+\begin{quote}
+repeat: \\
+	P(mutex2); (避免和其他写者发生冲突) \\
+	++write$\_$count; \\
+	if(write$\_$count == 1) \\
+	begin \\
+	P(read); (不允许读者读) \\
+	V(mutex2); \\
+	P(write); (当有人在读或有人在写的时候等待) \\
+	写; \\
+	V(write); (写完之后才允许别人写) \\
+	P(mutex2) \\
+	- -write$\_$count; \\
+	if(write$\_$count == 0) \\
+	begin \\
+	V(read);(如果没人在写,则允许读者读) \\
+	end \\
+	V(mutex2) \\
+until false;
+\end{quote}
+
+\end{CJK*}
+\end{document}
