@@ -1,0 +1,162 @@
+\documentclass[a4paper,12pt,notitlepage]{article}
+\usepackage{CJKutf8}
+\usepackage{indentfirst}
+\usepackage{amsmath}
+
+\setlength{\parindent}{2em} 
+
+\begin{CJK*}{UTF8}{gbsn}
+\begin{document}
+
+\title{OS\ 4\ 进程管理}
+\author{整理:hiaoxui}
+\maketitle
+
+\section{进程间的相互作用}
+
+\begin{itemize}
+	\item 无关进程和相关进程
+	\begin{itemize}
+		\item 无关进程
+		\begin{itemize}
+			\item 一个程序的执行不会影响其他程序执行
+			\item 没有共享的变量
+		\end{itemize}
+		\item 相关进程
+		\begin{itemize}
+			\item 在逻辑上有某种联系
+			\begin{itemize}
+				\item 和时间有关的错误
+				\item 操作顺序冲突
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+	\item 进程的交互关系
+	\begin{itemize}
+		\item 相互不感知:竞争
+		\begin{itemize}
+			\item 互斥:多个进程不能同时使用一个资源
+			\item 死锁:多个进程互不相让,都得不到足够的资源
+			\item 饥饿:一个进程一直得不到资源
+		\end{itemize}
+		\item 间接感知(如共享资源):通过共享进行协作
+		\item 直接感知:通过通信进行合作
+	\end{itemize}
+	\item 进程的协作和竞争
+	\begin{itemize}
+		\item 竞争出现了两个问题:死锁和饥饿
+		\item 进程的互斥是解决进程间竞争关系(间接制约关系)的手段
+		\item 进程的同步是解决进程间协作(直接制约关系)的手段
+		\begin{itemize}
+			\item 直接:相互制约关系源于进程合作
+			\item 简洁:相互制约关系表现为资源共享
+		\end{itemize}
+	\end{itemize}
+	\item 进程的同步和互斥
+	\begin{itemize}
+		\item 同步:进程需要相互合作,共同完成一项任务
+		\item 互斥:各个进程需要共享资源,进程间竞争使用资源
+		\item 临界资源:某些资源一次只允许一个进程使用
+		\item 临界区(互斥区):进程中涉及到临界资源的程序段
+		\item 要求进入临界区的进程构成互斥关系
+		\item 实现互斥访问的四个条件
+		\begin{itemize}
+			\item 任何两个程序不能同时进入临界区
+			\item 不能事先假定CPU个数和运行速度
+			\item 当一个程序运行在它的临界区外面的时候,不能妨碍其他进程进入临界区
+			\item 任何一个程序进入临界区的要求应该在有限时间内得到满足
+		\end{itemize}
+		\item 系统对相关临界区调度使用原则
+		\begin{itemize}
+			\item 有空让进
+			\item 无空等待
+			\item 多中选一
+			\item 有限等待
+			\item 让权等待
+		\end{itemize}
+		\item 锁的操作
+		\item 占线等待策略
+		\begin{itemize}
+			\item 以上的策略都属于占线等待策略,当一个程序想进入临界区的时候,首先检查是否被允许,如果允许则进入,否则循环等待.
+		\end{itemize}
+	\end{itemize}
+	\item 信号量和P,V操作
+	\begin{itemize}
+		\item 两种实现方式
+		\begin{itemize}
+			\item semaphore的初始值大于0,0表示没有空闲资源,正数表示当前空闲资源的数量
+			\item semaphore的取值可正可负,负值的绝对值表示正在等待进入临界区的进程个数
+		\end{itemize}
+		\item P,V原语
+		\begin{itemize}
+			\item P,V原语是原子操作,不会被时钟打断
+			\item P,V原语包含有进程的组合和唤醒,不会占用CPU时间
+			\item P原语:申请一个空闲资源(-1)
+			\item V原语:释放一个空闲资源(+1)
+		\end{itemize}
+		\item 每个信号量s有一个整数值(计数),还有一个进程等待队列.
+		\item P操作
+		\begin{itemize}
+			\item 申请一个资源
+			\item  伪代码\\
+			
+	s.Value -= 1; \\
+	if(s.value < 0) \\
+	\{ \\
+		将该进程状态设置为等待 \\
+		将该进程的pcb插入s型号等待队列末尾,直到有其他进程执行V操作 \\
+	\} \\
+	
+		\end{itemize}
+		\item V操作
+		\begin{itemize}
+			\item 表示对变量S执行V操作
+			\item 伪代码 \\
+			
+			s.Value += 1 \\
+			if(s.value <= 0) \\
+			\{ \\
+				释放S在信号量队列中等待的一个进程 \\
+				将其改变为就绪态,并插入就绪队列 \\
+				执行本操作的进程继续执行 \\
+			\}
+		\end{itemize}
+		\item P,V一定成对出现
+		\begin{itemize}
+			\item 互斥操作:P,V出现在同一进程中
+			\item 同步操作:P,V出现在不同进程中
+			\item 如果$P_{S_1}$和$P_{S_2}$出现在一起,则同步操作的P一定在在互斥操作的P之前
+			\item V操作则没有此要求
+		\end{itemize}
+		\item 优缺点
+		\begin{itemize}
+			\item 简单,表达能力强
+			\item 不够安全,可能出现死锁,遇到复杂的同步问题时实现复杂
+		\end{itemize}
+		\item 可以用信号量来描述前趋关系
+		\begin{itemize}
+			\item 简单的生产者-消费者关系
+			\begin{itemize}
+				\item P进程不能向满的缓冲区中放产品
+				\item Q进程不能从空的缓冲区中取产品
+			\end{itemize}
+			\item 三个并发进程的读写问题
+			\begin{itemize}
+				\item 键盘输入$->$缓冲区s$->$缓冲区t$->$print
+			\end{itemize}
+			\item 多个生产者消费者问题
+			\begin{itemize}
+				\item 若干生产者P,若干消费者Q,消费者通过一环形缓冲区联系
+				\item 设置信号量empty,初值为n,指示缓冲池中空缓冲池的个数
+				\item 信号量full指示满缓冲池的个数
+				\item mutex指示临界区的互斥
+				\item int i, j, 指示空缓冲区的头指针和满缓冲区的头指针
+			\end{itemize}
+			\item 路口单双号交通管制问题解决方案
+			\item 读写者问题
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\end{CJK*}
+\end{document}
