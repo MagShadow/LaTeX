@@ -1,0 +1,182 @@
+\documentclass[a4paper,12pt,notitlepage]{article}
+\usepackage{CJKutf8}
+\usepackage{indentfirst}
+\usepackage{amsmath}
+
+\setlength{\parindent}{2em} 
+
+\begin{CJK*}{UTF8}{gbsn}
+\begin{document}
+
+\title{ICN\ 07\ 差错控制与差错检测}
+\author{整理:hiaoxui}
+\maketitle
+
+\section{差错控制}
+
+\begin{itemize}
+	\item 对传输的信息进行错误检测,并加以恰当处理.
+	\begin{itemize}
+		\item 正确接收:帧按照发出的次序到达,并且每个帧有不定长的传输延迟
+		\item 检错能力:当发现错误的时候,丢弃错误信息并要求重新传输该信息
+		\item 纠错能力:当发现错误时,立即改正
+	\end{itemize}
+	\item ARQ:自动重发检错
+	\begin{itemize}
+		\item 肯定确认
+		\item 超时重发:发送方在预定时间内未收到确认便重发帧
+		\item 否定确认与重发:接收方返回否定确认,发送方重发帧
+	\end{itemize}
+	\item 停-等式ARQ应对出错数据帧:收到肯定确认后再发送下一帧
+	\begin{itemize}
+		\item 两种出错情况
+		\begin{itemize}
+			\item 数据帧被破坏
+			\item 数据帧被丢失
+		\end{itemize}
+		\item 确认帧出错
+		\begin{itemize}
+			\item ACK被破坏
+			\item ACK被丢失
+			\item 数据帧和确认帧都用交叉的0/1表示
+		\end{itemize}
+		\item 简单但效率低
+	\end{itemize}
+	\item 回退-N ARQ
+	\begin{itemize}
+		\item 顺序收发方式:接收方只能按照帧的序号接收数据帧
+		\item 发送方连续发出N个帧,接收方一旦发现某个帧有错,则立即丢弃该帧和之后收到的所有帧.
+		\item 数据帧被破坏
+		\begin{itemize}
+			\item 发送方T传出一帧i被损坏,接收方R已成功接收帧(i-1)
+			\begin{itemize}
+				\item R发回REJi;表明拒收帧i;
+				\item T收到REJi后,重传帧i及其后续帧;
+			\end{itemize}
+			\item 帧i在传输中被丢失,发送方T随后发送帧(i+1)
+			\begin{itemize}
+				\item R收到帧(i+1)后发现次序不对,发回REJi;
+				\item T收到REJi后,重传帧i及后续帧;
+			\end{itemize}
+			\item 帧i在传输中被丢失,发送方T并没继续发送帧
+			\begin{itemize}
+				\item R收不到任何信息,发回一个RR(而不是REJ);
+				\item 当T的i计时器超时,发一个RR帧;
+			\end{itemize}
+		\end{itemize}
+		\item 确认帧丢失
+		\begin{itemize}
+			\item R收到帧i并发送RR(i+1),该确认帧在途中丢失
+			\begin{itemize}
+				\item 在T的帧计时器超时前可能收到随后帧的确认。
+			\end{itemize}
+			\item T的计时器超时,发一个RR帧请求接收方回复确认
+			\begin{itemize}
+				\item 若R没有响应或响应帧被损坏则T重发RR;
+				\item 这种过程重复一定次数后启动重置过程;
+			\end{itemize}
+		\end{itemize}
+		\item REJ被破坏
+		\begin{itemize}
+			\item 同前面处理过程
+		\end{itemize}
+		\item 为了不至于混淆,最大的发送窗口为$2^n - 1$
+		\item 特点
+		\begin{itemize}
+			\item 要求每一帧的确认在其后第N个帧尚未结束发送之前到达
+			\item 发送方必须有存放N帧信息的缓存以便出错时重发
+			\item 接收方只要求存放一帧大小的缓冲区
+			\item 要求全双工链路
+		\end{itemize}
+		\item 消除了停-等式ARQ的等待应答时间
+		\item 但是正确帧的重发浪费了信道
+	\end{itemize}
+	\item 选择重传ARQ
+	\begin{itemize}
+		\item 一次连续发送N个帧,当接收方发现其中有错帧时就给发送方反馈要求重发帧的序号,其余(N-1)个正确帧被接收方存储起来。
+		\item 特点
+		\begin{itemize}
+			\item 接收方必须有足够的存储空间以便缓存(N-1)个帧
+			\item 接收方的接收顺序可能会打乱原发送顺序
+			\item 要求全双工的工作链路
+			\item 信道利用率高
+			\item 实现复杂,接收方要有足够的存储空间
+		\end{itemize}	
+		\item 最大窗口:$2^{n-1}$			
+	\end{itemize}
+\end{itemize} 
+
+\section{差错检测原理}
+
+\begin{itemize}
+	\item 差错控制的根本措施:采用抗干扰编码(纠错编码)
+	\begin{itemize}
+		\item 码组:由n个码元(0,1)构成的每一组合。
+		\item 信息码:代表消息的0和1
+		\item 校验码组:插入的0和一
+		\item 准用码组和禁用码组
+		\item 码距:两个码组对应码位码元不同的个数
+		\item 汉明距离:一个码组集合中任意两个码组间最小码距
+	\end{itemize}
+	\item 差错检测编码关系式
+	\begin{itemize}
+		\item 为了检出e个错码,要求汉明距离
+\begin{align*}
+	d \geq e+1
+\end{align*}
+		\item 为了纠正t个错码,要求汉明距离
+\begin{align*}
+	d \geq 2t+1
+\end{align*}
+		\item 为了检出e个错码,同时纠正t个错码,要求
+\begin{align*}
+	d \geq t + e + 1
+\end{align*}
+	\end{itemize}
+	\item 编码效率:指一个码组中信息所占的比重,用R表示,这是衡量编码性能的一个重要参数.
+\end{itemize}
+
+\section{奇偶校验编码}
+
+\begin{itemize}
+	\item 先将所要传送的数据码元分组。在各组的数据后面附加一位校验位,使得该组码连校验位在内的码字中
+	\begin{itemize}
+		\item “1”的个数为偶数—偶校验
+		\item “1”的个数为奇数—奇校验
+	\end{itemize}
+	\item 检错能力逐渐加强:垂直奇偶校验,水平奇偶校验,垂直水平奇偶校验,斜奇偶校验
+	\item 垂直奇偶校验编码
+	\begin{itemize}
+		\item 发送端在k位表示字符的信息位上附加一个第k+1位的校验位;
+		\item 接收端根据收到的k位重新产生校验位,并与第k+1位作比较。相同则无错,否则存在错误。
+	\end{itemize}
+	\item 水平奇偶校验编码
+	\begin{itemize}
+		\item 在传送数据时将若干个字符组成一组信息;
+		\item 对一组内的各字符的同一位进行奇偶校验时;
+	\end{itemize}
+	\item 垂直水平奇偶校验编码
+	\begin{itemize}
+		\item 把垂直和水平两个方向的奇偶校验结合起来使用
+		\item 可以检测出3位以下的所有错误
+		\item 可以检测出全部奇数错误
+		\item 可以检测出大部分偶数错误
+		\item 可以检测出长度$<k + 1$的突发错误
+	\end{itemize}
+\end{itemize}
+
+\section{循环冗余校验码(CRC)}
+
+\begin{itemize}
+	\item 发送方将要传送的信息分成码组M,然后按某一种约定的规律对每一个信息码组附加一些校验码R,形成新的码C,使得C中的码元之间具有一定的相关性(即码组中“1”和“0”的出现彼此相关),再传输到接收方.
+	\item 接收方根据这种相关性或规律性来校验码C是否正确,还可对出错码组的错定位加以相应的纠正,最后将码C还原成信息码M。
+	\item 码多项式及其算术运算
+	\begin{itemize}
+		\item 形式见pdf
+	\end{itemize}
+	\item 循环码形式
+	\item 汉明纠错码
+\end{itemize}
+
+\end{CJK*}
+\end{document}

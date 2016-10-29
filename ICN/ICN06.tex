@@ -1,0 +1,188 @@
+\documentclass[a4paper,12pt,notitlepage]{article}
+\usepackage{CJKutf8}
+\usepackage{indentfirst}
+
+\setlength{\parindent}{2em} 
+
+\begin{CJK*}{UTF8}{gbsn}
+\begin{document}
+
+\title{ICN\ 06\ 数据链路层概述与流量控制}
+\author{整理:hiaoxui}
+\maketitle
+
+\section{数据链路层的基本问题}
+
+\begin{itemize}
+	\item 向网络层提供服务
+	\begin{itemize}
+		\item 无确认的无连接服务
+		\item 有确认的无连接服务
+		\item 面向连接的服务
+		\item 帧:数据链路层上交换数据的单位
+	\end{itemize}
+	\item DL处理的问题和基本功能
+	\begin{itemize}
+		\item 如何产生和识别帧界(要把帧封装好)
+		\begin{itemize}
+			\item 成帧拆帧产生校验码
+		\end{itemize}
+		\item 解决帧损坏,丢失和重复的问题
+		\begin{itemize}
+			\item 差错控制
+		\end{itemize}
+		\item 防止高速发送的数据把低速数据淹没
+		\begin{itemize}
+			\item 流量控制
+		\end{itemize}
+		\item 解决确认帧和数据帧竞争路线
+		\begin{itemize}
+			\item 链路管理
+		\end{itemize}
+		\item 广播网络如何控制访问共享传输介质
+		\begin{itemize}
+			\item MAC
+		\end{itemize}
+	\end{itemize}
+	\item 链路层的实现
+	\begin{itemize}
+		\item 网卡硬件/固件和驱动系统
+	\end{itemize}
+	\item 如何形成数据帧
+	\begin{itemize}
+		\item 涉及的问题
+		\begin{itemize}
+			\item 将网络层交下来的数据包敖钊所用的协议规定个格式封装成一定形式的帧
+			\item 考虑双方的同步问题（定界）
+			\item 计算帧的校验和并放入帧中一起传输给对方以便差错校验
+		\end{itemize}
+		\item 字数计数法
+		\begin{itemize}
+			\item 用第一个字节说明帧的长度
+			\item 绝对不能出错
+		\end{itemize}
+		\item 字符填充的首尾定界法
+		\begin{itemize}
+			\item 转义字符(ESC)
+			\begin{itemize}
+				\item 正文中出现了flag时,用ESC把紧随其后的字符的原有含义去掉
+			\end{itemize}
+			\item 比特填充的首尾定界法
+			\begin{itemize}
+				\item 特殊的比特:111111
+				\item 特殊的比特模式:每发送5个1就插入一个0,接收的时候再去掉
+			\end{itemize}
+			\item 物理层编码违例法
+			\begin{itemize}
+				\item Manchester编码不能有持续的高电平或者低电平,用违例来标志flag
+			\end{itemize}
+			\item 综合法
+			\begin{itemize}
+				\item 最常用的办法
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+	\item 流量控制
+	\begin{itemize}
+		\item 限制发送方发送速度,使发送方速率不能超过接收方处理的速率
+		\item 流量控制的特点
+		\begin{itemize}
+			\item 动态的(和协议栈上层的实体的处理速度也有关系)
+			\item 反馈的
+		\end{itemize}
+	\end{itemize}
+	\item 差错控制
+	\begin{itemize}
+		\item 顺序到达:保证所有帧都按照正确次序到达目的地
+		\begin{itemize}
+			\item 确认方式
+			\begin{itemize}
+				\item ACK肯定确认
+				\item NAK否则确认
+			\end{itemize}
+			\item 计时器
+			\begin{itemize}
+				\item 计时器值的设置要保证一帧到达并做处理以后,相应的确认帧返回
+			\end{itemize}
+		\end{itemize}
+		\item 检查和纠错
+		\begin{itemize}
+			\item 一般在民用网络中不纠错
+		\end{itemize}
+	\end{itemize}
+	\item MAC
+\end{itemize} 
+
+\section{停等流量控制}
+\begin{itemize}
+	\item 发送实体发送一帧之后返回确认帧,发送实体接收到确认帧之后再发送下一帧
+	\item 优点
+	\begin{itemize}
+		\item 控制简单
+		\item 适合包分成数量不多较大帧的发送
+		\item 目标实体(接收端)能简单地用停止发送确认的方式来阻止数据流.
+	\end{itemize}
+	\item 缺点
+	\begin{itemize}
+		\item 效率不高
+		\item 当一个包用多个帧发送
+		\item 链路的比特长度大于帧长时
+	\end{itemize}
+\end{itemize}
+
+\section{滑动窗口流量控制}
+\begin{itemize}
+	\item 利用窗口控制连续发送的信号
+	\item 工作描述
+	\begin{itemize}
+		\item 两个站是全双工链路链接
+		\item 每个站为n个帧分配缓存区
+		\item 为每帧分配一个序号
+		\begin{itemize}
+			\item 序号空间:帧序号的取值范围
+			\item 序号空间是循环使用的
+		\end{itemize}
+	\end{itemize}
+	\item 窗口机制
+	\begin{itemize}
+		\item 发送窗口:给出允许发送站连续发送的帧序号
+		\item 接收窗口:给出允许接收站接收的帧序号
+		\item 两个窗口可以不一样大
+		\item 窗口不是缓存区,只存放序号
+		\item 在接收到ACK之后,发送窗口向前滚动
+		\item 在发出ACK之后,接收窗口向前滚动
+	\end{itemize}
+	\item 滑动窗口用于流量控制
+	\begin{itemize}
+		\item 肯定确认帧RR
+		\item 否认确认帧RNR
+		\item 全双工
+	\end{itemize}
+	\item 捎带确认技术
+	\begin{itemize}
+		\item 既有数据又有确认时合为一帧
+	\end{itemize}
+	\item 累计确认:接收方可收到第K个帧时发送确认前K-1帧已经正确接收
+	\begin{itemize}
+		\item 确认时机
+		\begin{itemize}
+			\item 当收到的帧数大到某个值或从接收第一帧开始等待的时间超过某定值时,要单独发送ACK,以免发送方因超时而重发
+			\item 当收到第n帧有错是,要马上返回NAK
+		\end{itemize}
+	\end{itemize}
+	\item 滑动窗口流量控制性能
+	\begin{itemize}
+		\item 线路效率取决于双方窗口大小N和a的值
+		\item N > 2a+1 时,可以连续发送,效率高,为1.0
+		\item N < 2a+1 时,效率受限制 N/(2a+1)
+		\item 当N=1时,回到了停等式协议
+	\end{itemize}
+	\item 管道化技术:发送端为达到信道最大效率必须连续不断发送数据
+	\begin{itemize}
+		\item 带宽延迟乘积:管道的体积
+		\item 如果没有填满管道就停下来等待接收方确认,发送方就没法充分利用网络资源
+	\end{itemize}
+\end{itemize}
+
+\end{CJK*}
+\end{document}

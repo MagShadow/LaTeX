@@ -1,0 +1,188 @@
+\documentclass[a4paper,12pt,notitlepage]{article}
+\usepackage{CJKutf8}
+\usepackage{indentfirst}
+\usepackage{amsmath}
+
+\setlength{\parindent}{2em} 
+
+\begin{CJK*}{UTF8}{gbsn}
+\begin{document}
+
+\title{ICN\ 08\ 局域网概述与IEEE802.3协议}
+\author{整理:hiaoxui}
+\maketitle
+
+\section{IEEE802体系结构}
+
+\begin{itemize}
+	\item 局域网的两个特性
+	\begin{itemize}
+		\item 用带地址帧来传输数据
+		\item 不存在交换单元
+	\end{itemize}
+	\item 局域网所需要的层次
+	\begin{itemize}
+		\item 层1:物理连接是必需的
+		\item 层2:通过局域网传送数据必须组成帧并进行一定控制
+		\item 第三层本来需要寻址,但是局域网不需要这层,寻址,排序,流控,差错控制等在数据链路层中实现
+	\end{itemize}
+	\item 802参考模型:PHY$->$MAC$->$LLC
+	\begin{itemize}
+		\item DL(数据链路层)分成MAC和LLC(逻辑链路控制层)子层
+	\end{itemize}
+\end{itemize}
+
+\section{介质访问控制}
+
+\begin{itemize}
+	\item 介质访问控制是将传输介质带宽有效地分给网上各站点用户的办法
+	\item 访问控制技术
+	\begin{itemize}
+		\item 同步
+		\begin{itemize}
+			\item 规定好了每个用户的传输容量
+			\item 类似于TDMA和FDMA
+			\item 当峰值流量:平均流量比较大的时候不太适合
+		\end{itemize}
+		\item 异步
+		\begin{itemize}
+			\item 动态分配给每个站点的传输量,响应用户的即时要求
+		\end{itemize}
+	\end{itemize}
+	\item 异步控制的实现方式
+	\begin{itemize}
+		\item 分布式
+		\begin{itemize}
+			\item 由各个站点共同完成介质访问控制,动态决定站的发送顺序
+			\item 单点故障不会影响全网
+			\item 效率高,延迟低
+		\end{itemize}
+		\item 集中式
+		\begin{itemize}
+			\item 某个控制器拥有控制全网的能力
+			\item 提供了优先权等其他功能
+			\item 每个站的逻辑关系相对简单
+			\item 避免了协调问题
+		\end{itemize}
+	\end{itemize}
+	\item 假设
+	\begin{itemize}
+		\item 流量独立
+		\item 单信道
+		\item 冲突可观察
+		\item 连续时间 || 时间槽(是否随时可以发送)
+		\item 载波侦听 || 非载波侦听(是否可以检测信道忙)
+	\end{itemize}
+	\item 竞争系统
+	\begin{itemize}
+		\item 多个用户以可能冲突的方式共享公用信道
+		\item 三大问题
+		\begin{itemize}
+			\item 访问时机(针对一个公共信道的访问时机,是否随时可以发送)
+			\item 冲突检测
+			\item 重试策略
+		\end{itemize}
+		\item 纯ALOHA协议
+		\begin{itemize}
+			\item 不按时间槽,不侦听,随机重发
+			\item 帧时:发送帧所用时间
+			\item 信道效率:避开冲突并正确到达的比例
+			\item 例题没有讲
+		\end{itemize}
+		\item 分槽ALOHA协议
+		\begin{itemize}
+			\item 每次发送的时候必须在时间槽的起始时刻开始发送信息
+			\item 影响效率的最大因素还是冲突
+		\end{itemize}
+		\item CSMA载波侦听多路访问
+		\begin{itemize}
+			\item 站间传播延迟$<$帧的传输时间
+			\item 首先侦听载波是否存在,然后采取行动
+			\item 影响因素:帧的长度和传播延迟
+			\item 坚持CSMA
+			\begin{itemize}
+				\item 一直监测信道,一旦遇到空闲马上传输
+				\item 冲突的可能性比较大
+			\end{itemize}
+			\item 非坚持CSMA
+			\begin{itemize}
+				\item 等待一个随机的时间再传输
+				\item 可能会浪费信道
+			\end{itemize}
+			\item P-坚持
+			\begin{itemize}
+				\item 如果介质空闲,以概率P传输
+				\item 以(1-P)的概率等待下一个时间槽
+				\item 如果介质忙,则等待一个时间槽
+				\item 还是浪费容量
+			\end{itemize}
+		\end{itemize}
+		\item 带冲突监测的CSMA协议
+		\begin{itemize}
+			\item CSMA/CD协议
+			\begin{itemize}
+				\item 如果介质空闲,传输
+				\item 介质忙,一直监听,遇到空闲马上传输
+				\item 若监测到冲突,立即停止传输,等待一个随机时间
+				\item CSMA/CD模型:竞争,传输,空闲
+			\end{itemize}
+			\item 如果确定胜出?
+			\begin{itemize}
+				\item 设最远的两个节点间传播时延为$\tau$
+				\item 等待$2\tau$之后发现没有冲突,则可以确认没有发生冲突
+			\end{itemize}
+			\item 站间传播延迟$<$帧的传输时间时,CSMA/CD的信道利用率高于CSMA
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+\section{IEEE 802.3}
+
+\begin{itemize}
+	\item MAC + PHY
+	\item 介质访问规则,采用坚持的CSMA/CD
+	\begin{itemize}
+		\item 如果介质空闲,立刻传输
+		\item 介质忙,继续监听,空闲则立刻传递
+		\item 传输的时候监测到冲突则发送简短的JAM信号
+		\item 发出JAM信号之后,等待一个随机时间发送
+		\item JAM:冲突加强信号
+	\end{itemize}
+	\item 冲突检测窗口
+	\begin{itemize}
+		\item 立即停止发送剩余内容,发送JAM信号
+		\item 按后退算法计算重发时间延迟
+		\item 重发16次仍不成功,则放弃
+		\item 二进制指数后退算法:平均等待时延
+\begin{equation}
+	M_{BEN} = (2^i-2)\times t\tau
+\end{equation}
+		i为冲突次数,$2\tau$为冲突窗口
+		\item 截断式后退算法:平均重发延迟
+	\end{itemize}
+	\item MAC帧的结构
+	\begin{itemize}
+		\item DA目的地址 2-6
+		\item SA源地址 2-6(只能是单地址)
+		\item PAD填充,至少64字节
+	\end{itemize}
+	\item 这是一个无连接服务,只能确认是发送成功,不代表接收方不一定正确收到,所以是无确认服务
+	\item 冲突域
+	\begin{itemize}
+		\item 两个或以上站点同时发送将产生冲突的区域
+		\item hub和switch
+	\end{itemize}
+	\item 交换式以太网
+	\begin{itemize}
+		\item 插板是一个冲突域
+		\item 所有背板可以并行操作
+	\end{itemize}
+	\item 虚拟局域网
+	\begin{itemize}
+		\item 优点:扩展性好,安全性好
+		\item 缺点:虚拟链路容量不能保证
+	\end{itemize}
+\end{itemize}
+
+\end{CJK*}
+\end{document}
