@@ -1,0 +1,312 @@
+\documentclass[a4paper,12pt,notitlepage]{article}
+\usepackage{CJKutf8}
+\usepackage{indentfirst}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{graphicx}
+
+\begin{CJK*}{UTF8}{gbsn}
+\begin{document}
+
+\title{计算机网络概论第一次上机报告}
+\author{秦光辉\ 1500011398}
+\maketitle
+
+\section{停等式协议}
+
+	停等式的发送端滑动窗口大小是1, 我使用了一个循环队列处理这个问题. 队列的定义为
+	
+\begin{lstlisting}[frame=shadowbox,numbers=left]
+node *stop_and_wait_list_tail = 
+new node(WINDOW_SIZE_STOP_WAIT + 1);
+node *stop_and_wait_list_head = 
+stop_and_wait_list_tail;
+\end{lstlisting}
+
+	node是一个节点的类, 队列长度为2是考虑到了有空的队列头. 在收发消息的时候, 循环链表的滚动即为窗口的滚动. \\
+	
+	考虑到滑动窗口满的时候也可能有信息进入, 我又定义了一个wait$\_$list的类. 这个类是一个单链表, 可以push和pop, 存有frame和bufferSize两个成员. 这样在窗口满的时候, 我们可以暂时把信息存入这个类中, 当收到ACK信息的时候再把队列中的信息pop出来并发送出去. 这样我们就获得了一个等待列表. \\
+	
+	当函数被调用的时候, 首先会去检查messageType. 使用switch跳转, 分为三种情况处理. \\
+	
+	MSG$\_$TYPE$\_$TIMEOUT: 这个时候说明有信息超时. 对于停等式协议而言, 滑动窗口中此时肯定只有一个信息, 所以函数直接把头结点的信息重新发送一次即可. \\
+	
+	MSG$\_$TYPE$\_$SEND: 说明有信息需要发送. 检查滑动窗口, 如果未满, 立即发送并存到滑动窗口中. 如果已满, 则存到等待队列中. \\
+	
+	MSG$\_$TYPE$\_$RECEIVE: 说明收到了ACK信息. 此时滑动窗口可以向前移动一格. 检查等待队列, 如果有信息未发送, 则立即发送并存入滑动窗口中.
+	
+\section{回退n协议}
+
+	类定义与停等式协议相同, 函数上有所区别. \\
+	
+	当函数被调用的时候, 首先会去检查messageType. 使用switch跳转, 分为三种情况处理. \\
+	
+	MSG$\_$TYPE$\_$TIMEOUT: 这个时候说明有信息超时. 对于回退n协议而言, 滑动窗口中此时可能有多个信息. 收到超时提示, 则应该把滑动窗口中的信息重新发送. \\
+	
+	MSG$\_$TYPE$\_$SEND: 说明有信息需要发送. 检查滑动窗口, 如果未满, 立即发送并存到滑动窗口中. 如果已满, 则存到等待队列中. \\
+	
+	MSG$\_$TYPE$\_$RECEIVE: 说明收到了ACK信息. 此时滑动窗口可以向前移动, 一直移动到pBuffer所指示的序号为止. 检查等待队列, 如果有信息未发送, 则立即发送并存入滑动窗口中, 一直发送到滑动窗口满为止.
+
+\section{选择重传协议}
+
+	类定义与停等式协议相同, 函数上有所区别. \\
+	
+	当函数被调用的时候, 首先会去检查messageType. 使用switch跳转, 分为三种情况处理. \\
+	
+	MSG$\_$TYPE$\_$TIMEOUT: 这个时候说明有信息超时. 对于选择重传协议而言, 滑动窗口中此时可能有多个信息. 收到超时提示, 则应该把滑动窗口中的信息重新发送. \\
+	
+	MSG$\_$TYPE$\_$SEND: 说明有信息需要发送. 检查滑动窗口, 如果未满, 立即发送并存到滑动窗口中. 如果已满, 则存到等待队列中. \\
+	
+	MSG$\_$TYPE$\_$RECEIVE: 可能有两种信息传入, 分别是ACK和NAK信息. 如果收到了ACK信息, 滑动窗口可以向前移动, 一直移动到pBuffer所指示的序号为止. 检查等待队列, 如果有信息未发送, 则立即发送并存入滑动窗口中, 一直发送到滑动窗口满为止. 如果收到了NAK信息, 则检查滑动窗口, 从尾部向前移动, 直到某个信息的序号和pBuffer指示的序号一样. 重新发送该信息.
+	
+\section{代码}
+
+\begin{lstlisting}[frame=shadowbox,numbers=left]
+#include "sysinclude.h"
+
+extern void SendFRAMEPacket(unsigned char* pData, unsigned int len);
+
+#define WINDOW_SIZE_STOP_WAIT 1
+#define WINDOW_SIZE_BACK_N_FRAME 4
+
+typedef enum {data,ack,nak} frame_kind;
+
+typedef struct frame_head
+{
+  frame_kind kind;
+  unsigned int seq;
+  unsigned int ack;
+  unsigned char data[100];
+};
+
+typedef struct frame
+{
+  frame_head head;
+  unsigned int size;
+};
+
+struct node
+{
+  
+  node() {}
+
+  node(int num)
+  {
+    node *curr = this;
+    while(num > 1)
+    {
+      --num;
+      curr->next = new node();
+      curr = curr->next;
+    }
+    curr->next = this;
+  }
+
+  node* next;
+  frame data;
+  int bufferSize;
+};
+
+struct wait_list
+{
+  wait_list()
+  {
+    head = new node();
+    tail = head;
+  }
+  
+  void push(char *pBuffer, int bufferSize)
+  {
+    frame *f = (frame *)pBuffer;
+    head->data = *f;
+    head->bufferSize = bufferSize;
+    head->next = new node();
+    head = head->next;
+  }
+
+  frame pop(int &bufferSize)
+  {
+    frame ret = tail->data;
+    bufferSize = tail->bufferSize;
+    node *tmp = tail->next;
+    delete tail;
+    tail = tmp;
+    return ret;
+  }
+
+  bool empty()
+  {
+    return tail == head;
+  }
+
+  node *head;
+  node *tail;
+};
+
+wait_list stop_and_wait_waitlist, back_n_frame_waitlist, choice_frame_resend_waitlist;
+node *stop_and_wait_list_tail = new node(WINDOW_SIZE_STOP_WAIT + 1);
+node *stop_and_wait_list_head = stop_and_wait_list_tail;
+
+node *back_n_frame_list_head = new node(WINDOW_SIZE_BACK_N_FRAME + 1);
+node *back_n_frame_list_tail = back_n_frame_list_head;
+
+node *choice_frame_resend_list_head = new node(WINDOW_SIZE_BACK_N_FRAME + 1);
+node *choice_frame_resend_list_tail = choice_frame_resend_list_head;
+
+int stud_slide_window_stop_and_wait(char *pBuffer, int bufferSize, UINT8 messageType)
+{
+  frame *f = NULL;
+  switch(messageType) 
+  {
+    case MSG_TYPE_TIMEOUT:
+      f = &(stop_and_wait_list_head->data);
+      SendFRAMEPacket((unsigned char*)f, stop_and_wait_list_head->bufferSize);
+      break;
+
+    case MSG_TYPE_SEND:
+      if (stop_and_wait_list_tail->next != stop_and_wait_list_head)
+      {
+        SendFRAMEPacket((unsigned char*)pBuffer, bufferSize);
+        f = (frame *)pBuffer;
+        stop_and_wait_list_tail->data = *f;
+        stop_and_wait_list_tail->bufferSize = bufferSize;
+        stop_and_wait_list_tail = stop_and_wait_list_tail->next;
+      }
+      else
+      {
+        stop_and_wait_waitlist.push(pBuffer, bufferSize);
+      }
+      break;
+
+    case MSG_TYPE_RECEIVE:
+      stop_and_wait_list_head = stop_and_wait_list_head->next;
+      if(!stop_and_wait_waitlist.empty())
+      {
+        int size;
+        stop_and_wait_list_tail->data = stop_and_wait_waitlist.pop(size);  
+        stop_and_wait_list_tail->bufferSize = size;
+        f = &(stop_and_wait_list_tail->data);
+        SendFRAMEPacket((unsigned char*)f, stop_and_wait_list_tail->bufferSize);
+        stop_and_wait_list_tail = stop_and_wait_list_tail->next;
+      }
+      break;
+  }
+  return 0;
+}
+
+int stud_slide_window_back_n_frame(char *pBuffer, int bufferSize, UINT8 messageType)
+{
+  frame *f = NULL;
+  node *tmp;
+  switch(messageType) 
+  {
+    case MSG_TYPE_TIMEOUT:
+      tmp = back_n_frame_list_head;
+      while(tmp != back_n_frame_list_tail)
+      {
+        f = &(tmp->data);
+        SendFRAMEPacket((unsigned char*)f, tmp->bufferSize);
+        tmp = tmp->next;
+      }
+      break;
+
+    case MSG_TYPE_SEND:
+      if (back_n_frame_list_tail->next != back_n_frame_list_head)
+      {
+        SendFRAMEPacket((unsigned char*)pBuffer, bufferSize);
+        f = (frame *)pBuffer;
+        back_n_frame_list_tail->data = *f;
+        back_n_frame_list_tail->bufferSize = bufferSize;
+        back_n_frame_list_tail = back_n_frame_list_tail->next;
+      }
+      else
+      {
+        back_n_frame_waitlist.push(pBuffer, bufferSize);
+      }
+      break;
+
+    case MSG_TYPE_RECEIVE:
+      f = (frame *) pBuffer;
+      while (ntohl((back_n_frame_list_head->data).head.seq) <= ntohl(f->head.ack) && back_n_frame_list_head != back_n_frame_list_tail)
+        back_n_frame_list_head = back_n_frame_list_head->next;
+
+      while(!back_n_frame_waitlist.empty() && back_n_frame_list_tail->next != back_n_frame_list_head )
+      {
+        int size;
+        back_n_frame_list_tail->data = back_n_frame_waitlist.pop(size);  
+        back_n_frame_list_tail->bufferSize = size;
+        f = &(back_n_frame_list_tail->data);
+        SendFRAMEPacket((unsigned char*)f, back_n_frame_list_tail->bufferSize);
+        back_n_frame_list_tail = back_n_frame_list_tail->next;
+      }
+      break;
+  }
+  return 0;
+}
+
+int stud_slide_window_choice_frame_resend(char *pBuffer, int bufferSize, UINT8 messageType)
+{
+  frame *f = NULL;
+  node *tmp;
+  switch(messageType) 
+  {
+    case MSG_TYPE_TIMEOUT:
+      tmp = choice_frame_resend_list_head;
+      while(tmp != choice_frame_resend_list_tail)
+      {
+        f = &(tmp->data);
+        SendFRAMEPacket((unsigned char*)f, tmp->bufferSize);
+        tmp = tmp->next;
+      }
+      break;
+
+    case MSG_TYPE_SEND:
+      if (choice_frame_resend_list_tail->next != choice_frame_resend_list_head)
+      {
+        SendFRAMEPacket((unsigned char*)pBuffer, bufferSize);
+        f = (frame *)pBuffer;
+        choice_frame_resend_list_tail->data = *f;
+        choice_frame_resend_list_tail->bufferSize = bufferSize;
+        choice_frame_resend_list_tail = choice_frame_resend_list_tail->next;
+      }
+      else
+      {
+        choice_frame_resend_waitlist.push(pBuffer, bufferSize);
+      }
+      break;
+
+    case MSG_TYPE_RECEIVE:
+      f = (frame *) pBuffer;
+      if (ntohl(f->head.kind) == ack)
+      {
+        while (ntohl(choice_frame_resend_list_head->data.head.seq) <= ntohl(f->head.ack) && choice_frame_resend_list_head->next != choice_frame_resend_list_tail)
+          choice_frame_resend_list_head = choice_frame_resend_list_head->next;
+        while (!choice_frame_resend_waitlist.empty() && choice_frame_resend_list_tail->next != choice_frame_resend_list_head )
+        {
+          int size;
+          choice_frame_resend_list_tail->data = choice_frame_resend_waitlist.pop(size);  
+          choice_frame_resend_list_tail->bufferSize = size;
+          f = &(choice_frame_resend_list_tail->data);
+          SendFRAMEPacket((unsigned char*)f, choice_frame_resend_list_tail->bufferSize);
+          choice_frame_resend_list_tail = choice_frame_resend_list_tail->next;
+        }
+      }
+      else
+      {
+        node *tmp = choice_frame_resend_list_head;
+        while (ntohl(tmp->data.head.seq) != ntohl(f->head.ack) && choice_frame_resend_list_head != choice_frame_resend_list_tail)
+          tmp = tmp->next;
+        frame tmp_frame = tmp->data;
+        f = &tmp_frame;
+        SendFRAMEPacket((unsigned char*)f, tmp->bufferSize);
+      }
+      break;
+  }
+  return 0;
+}
+
+
+\end{lstlisting}
+
+\end{CJK*}
+\end{document}
