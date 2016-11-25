@@ -1,0 +1,50 @@
+\documentclass[a4paper,12pt,notitlepage]{article}
+\usepackage{CJKutf8}
+\usepackage{indentfirst}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{graphicx}
+
+\begin{CJK*}{UTF8}{gbsn}
+\begin{document}
+
+\title{计算机网络概论第二次上机报告}
+\author{秦光辉\ 1500011398}
+\maketitle
+
+\section{发送协议}
+
+	发送的时候需要设置的项目有version, IPv4字节头长度, ttl, protocol, 收发地址, 校验和等. \\
+	
+	version占半个字节, 设置为0x04. \\
+	
+	由于本次实验并不要求option部分, 所以ipv4的报头长度是固定的20个字节, 所以报文总长度为20 + len. 转换的时候要注意大端小端的转换问题. \\
+	
+	ttl与procotol直接设置为传入值即可. \\
+	
+	收发地址已经传入, 但是需要做进一步处理, 即地址应该进行大端小端转换. \\
+
+	校验头相对复杂. 如果把Sum设置为16位长度的话, 在求和之后可能会溢出. 所以把Sum设置为32位长度, 求和之后再向前折叠相加, 最后输出结果. \\
+	
+	把这些元素组合成报头, 并附加上数据data, 再将其传递给下层硬件即可完成任务, 返回0. \\
+	
+\section{接收协议}
+
+	接收报文的时候, 应该把char *pBuffer转换成无符号类型, 这样可以避免编译器在编译的时候自动进行符号位的填充. \\
+	
+	首先可以用大端小端转换的方法把IPv4报头中的各个元素提取出来, 其中有用的信息有version, IHL, ServiceType, len, TTL, Des等. \\
+	
+	version必须是4, 否则报错并返回1. \\
+	
+	TTL如果为0, 说明这个IPv4包应该已经达到寿命极限, 不能继续传递, 应该舍弃. 应该报错并返回1. \\
+	
+	如果Des和本机IP不一致, 则应该报错并返回1. \\
+	
+	len不能小于5, 因为报头最小长度是20个byte. 所以如果len小于5, 报错并返回1. \\
+	
+	这个时候应该校验IPv4报头是否正确. 此时把Sum设置成一个32位的无符号类型(避免溢出), 把数据报文拆分成16位一组, 不断累加至Sum. 如果报头字节数为奇数, 则最后一位应该单独相加. 这些数据求和之后, 再将Sum反复折叠求和, 直到Sum 16位以上的高位全部为0. 此时Sum的数值应该为0x0000FFFF, 如果不是说明数据传输有误, 应该立即报错并返回1. \\
+
+	如果以上部分都没有问题, 说明这个报头是正确的, 应该把它传递给上层, 并返回0.
+
+\end{CJK*}
+\end{document}
