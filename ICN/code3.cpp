@@ -239,7 +239,6 @@ void stud_route_add(stud_route_msg *proute)
 int stud_fwd_deal(char *pBuffer, int length)
 {
 	unsigned char *PBuffer = new unsigned char[length];
-	unsigned char IHL = PBuffer[0] & 0x0f;
 	for(int i = 0; i < length; ++i)
 		PBuffer[i] = (unsigned char)pBuffer[i];
 	unsigned Des = ntohl(*(unsigned *)(PBuffer + 16));
@@ -259,10 +258,9 @@ int stud_fwd_deal(char *pBuffer, int length)
 	
 	unsigned Sum = 0;
 	unsigned short *p_short = (unsigned short *)PBuffer;
-	for(int i = 0; i < IHL/2; ++i)
+	for(int i = 0; i < 10; ++i)
 		Sum += ntohl(p_short[i]);
-	if(IHL %2 == 1)
-		Sum += ((unsigned short)PBuffer[length - 1] << 8);
+
 	while (Sum >> 16)
 		Sum = (Sum & 0xFFFF) + (Sum >> 16);
 

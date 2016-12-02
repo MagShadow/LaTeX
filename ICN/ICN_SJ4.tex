@@ -1,0 +1,96 @@
+\documentclass[a4paper,12pt,notitlepage]{article}
+\usepackage{CJKutf8}
+\usepackage{indentfirst}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{graphicx}
+
+\begin{CJK*}{UTF8}{gbsn}
+\begin{document}
+
+\title{计算机网络概论第三次上机报告}
+\author{秦光辉\ 1500011398}
+\maketitle
+
+\section{global变量和自定义函数}
+
+	设置一个socketSeq函数, 用于标志每个socket, 在函数执行过程中会不断递增. \\
+	
+	把SYN$\_$SENT等等变量定义为不同的int值, 用于标志TCB的各个状态. \\
+	
+	定义TTL变量, 每次发送的时候用于设定TTL值. \\
+	
+	定义结构TCB, 用于保存每个TCB的状态. TCB内含有收发方端口, Ip地址, seq, ack, sockfd等等信息. 有两个构造函数, 分别用于不同的测试函数中. \\
+	
+	tcb是一个TCB的指针, 是TCB链表的第一项. Search是一个检索函数, 有两个重载版本. 第一个版本可以根据端口号和Ip地址来检索TCB, 另一个版本可以根据sockfd来检索TCB. \\
+	
+	deleteTCB是一个删除函数. 当TCB链表内有元素不再使用的时候, 可以用该函数删除相应表项.
+
+\section{Input函数}
+
+	接收到一个TCP报文的时候, 首先检查其校验和. 检查校验和的时候, 应该加上伪头, 伪头包含收发地址信息, 协议类型, 长度(不包含伪头)等信息. 把Sum设置成一个32位的无符号类型(避免溢出), 把数据报文拆分成16位一组, 不断累加至Sum. 如果报文字节数为奇数(用报文中的length信息), 则最后一位应该单独相加. 这些数据求和之后, 再将Sum反复折叠求和, 直到Sum 16位以上的高位全部为0. 查看Sum是否为0x0000FFFF, 如果是, 说明校验和正确. 如果校验和不正确, 应该结束函数并返回-1. \\
+	
+	从报文中提取出来发送方和接收方的端口号, 序列号, ACK等信息. 在TCB链表中搜索相应的TCB, 如果检索不到, 返回-1. 如果ACK和TCB不符, 则返回一个错误并return -1. \\
+	
+	接下来分情况讨论. 如果当前状态为SYN$\_$SENT, 且buffer中的flag被置为SYN和ACK, 说明这个时候TCB处于三次握手的最后一个环节, 此时应该记录报文序号和ACK, 置状态于ESTABLISHED, 并回复服务器一个ACK确认信息. \\
+	
+	如果TCB处于FIN$\_$WAIT$\_$1状态, 且buffer中的flag被置为ACK, 说明此时处于关闭的第一阶段, 应该转入FIN$\_$WAIT$\_$2阶段, 此时不需要发送信息. \\
+	
+	如果TCB处于FIN$\_$WAIT$\_$2状态, 且buffer中的flag被置为ACK和FIN, 需要发送确认ACK, 状态改变为TIME$\_$WAIT. \\
+	
+	如果上述的情况都没有发生, 说明遇到了未知情况, 应该返回-1.
+
+\section{Output函数}
+
+	首先申请一段内存空间存放buffer, 然后把data, 收发方port等信息存入buffer中. 在TCB链表中检索相应状态信息, 找到之后取出Seq和ACK号, 一并存入TCP报头中. \\
+
+	检查flag的值, 根据不同的值设置不同的flag. 如果flag是PACKET$\_$TYPE$\_$DATA, 说明此时需要传输数据, 不作处理. 如果flag是PACKET$\_$TYPE$\_$SYN, 说明此时需要进行第一次握手, 此时应该修改TCB状态为SYN$\_$SENT, 把buffer中的flag修改为SYN. 如果flag是PACKET$\_$TYPE$\_$SYN$\_$ACK, 说明此时收到了服务器的第二次握手信息, 应该发送第三次握手信息, 应该把buffer中flag置为SYN和ACK. 如果flag是PACKET$\_$TYPE$\_$ACK, 说明此时应该返回一个确认信息, 把flag置为ACK状态. 如果flag是PACKET$\_$TYPE$\_$FIN, 应该向服务器发送一个FIN信息, 修改buffer相应的flag. 如果flag是PACKET$\_$TYPE$\_$FIN$\_$ACK, 说明此时应该返回一个关闭通道的ACK确认信息, 应该把buffer中的flag设置为ACK和FIN. \\
+	
+	加入伪头, 伪头设置同上, 计算校验和, 然后写入buffer的checkSum中. \\
+	
+	调用tcp$\_$sendIpPkt, 把buffer发送到下层.
+
+\section{stud$\_$tcp$\_$socket函数}
+
+	我设置了一个global变量, 命名为socketSeq, 可以记录当前的socket编号. \\
+	
+	每次调用此函数的时候, 应该在TCB链表结尾加一个元素, 并将其socket编号设置为socketSeq, 然后递增socketSeq, 返回新TCB的socket编号.
+	
+\section{stud$\_$tcp$\_$connect函数}
+
+	首先检索TCB链表, 检查是否有相应表项, 如果没有则返回-1. \\
+	
+	如果找到了相应的TCB, 应该根据传入参数设置其收发方IP地址和端口号, 并通过stud$\_$tcp$\_$output向服务器发送一个同步请求. \\
+
+	设置一个临时buffer接收服务器信息, 等待时间上限设置为10, 如果返回的长度为-1, 返回错误并退出函数. \\
+	
+	如果收到了相应信息, 则说明服务器同意了这次连接请求, 把返回的buffer的序号和ACK号记录在TCB中, 向服务器返回一个ACK(第三次握手), 设置TCB状态为ESTABLISHED, 结束函数.
+
+\section{stud$\_$tcp$\_$send函数}
+
+	首先检索TCB链表, 检查是否有相应表项, 如果没有则返回-1. \\
+	
+	直接通过stud$\_$tcp$\_$output发送一个传输数据的请求, 从相应TCB表项中提取端口号, IP地址等信息传入stud$\_$tcp$\_$output函数中. \\
+	
+	设置一个临时buffer接收服务器信息, 并记录返回buffer长度. 如果buffer长度为-1, 返回一个错误并结束函数. 否则根据返回的buffer设置TCB的序号和ACK号等信息. 
+
+\section{stud$\_$tcp$\_$recv函数}
+
+	首先检索TCB链表, 检查是否有相应表项, 如果没有则返回-1. \\
+	
+	如果找到了相应的TCB, 设置一个临时buffer接收服务器信息, 等待时间上限设置为10, 如果返回的长度为-1, 返回错误并退出函数. \\
+	
+	如果收到了相应信息, 通过返回的报文获得报头长度信息. 再根据获得的数据长度信息, 把payload部分的信息拷贝到pData中. \\
+	
+	向服务器返回一个ACK确认信息, 根据buffer传递的序号和ACK号重新调整TCB的数据成员, 结束函数.
+
+\section{stud$\_$tcp$\_$close函数}
+
+	首先检索TCB链表, 检查是否有相应表项, 如果没有则返回-1. \\
+	
+	检查当前的TCB表项, 如果其状态没有被置于ESTABLISHED, 说明此时有一些问题发生. 应该把相应表项删除, 并返回错误. \\
+	
+	如果没有发生错误, 则此时应该向服务器发送一个FIN请求. 设置一个临时buffer接收服务器消息, 检查返回的报文flag选项, 如果不正确则返回错误. 如果正确, 修改状态为FIN$\_$WAIT$\_$2, 并等待下一次报文. 如果收到下一次报文且flag正确, 则修改状态为TIME$\_$WAIT, 返回一个ACK确认信息. 删除相应的TCB表项, 结束函数.
+
+\end{CJK*}
+\end{document}
