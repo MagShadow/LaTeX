@@ -1,0 +1,290 @@
+% 原子物理期末讨论课报告
+% 03/12/2016
+
+\documentclass[a4paper, 12pt, notitlepage]{article}
+
+\usepackage{CJKutf8}
+\usepackage{indentfirst}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{mathrsfs}
+\usepackage{cite}
+
+\setlength{\parindent}{2em} 
+
+\begin{CJK*}{UTF8}{gbsn}
+\begin{document}
+
+\title{自由电子气模型}
+\author{1500011398 \ 秦光辉\\物理学院\ hiaoxui@pku.edu.cn\\  \ 不愿意作报告}
+\maketitle
+
+\begin{abstract}
+	本报告从巨正则系综理论出发, 推导出了电子气的简并压公式. 然后由此出发讨论了金属的热容在绝对零度附近不遵循德拜定律的原因, 并分析了白矮星内部的电子气模型, 半定量证明了白矮星在巨大引力下没有坍缩其实是因为白矮星内部电子气产生简并压作用的结果.
+\end{abstract}
+
+\section{费米能量}
+
+\subsection{金属中的电子气模型}
+
+	作为简化, 我们首先讨论金属中电子的性质. 金属是一种比较特殊的物质, 它的内部没有分子键也没有离子键. 金属内部的正电荷被库仑力束缚在格点中, 以不同的方式堆积, 而金属中的价电子则作为自由电子, 可以在晶体中自由移动. 正电荷在金属中的排列是近似均匀的, 我们可以把它看做是均匀背景. 这样我们就可以把电子看做近似自由的粒子.\cite{3 {2001}} \\
+	
+\subsection{从系综理论导出费米能量}
+	
+	在我们讨论的范围下, 电子的数目达到了阿伏伽德罗常数数量级. 我们不妨使用热力学方法来讨论. 使用热力学方法讨论电子状态, 可以使用最概然分布方法处理, 但是这种处理方法往往忽略了粒子间的相互作用. 我们所讨论的电子是有相互作用力的, 而且由于电子是费米子, 不像玻色子一样状态可以随意分布, 所以我们应该使用系综理论来讨论电子的状态分布. \\
+	
+	以巨正则系综理论为例. 在巨正则系综中, 电子具有确定的化学势, 温度和体积. 电子在相空间中分布的概率密度分布为\cite{1 {1994}}:
+	
+\begin{align}
+	\rho = \frac{1}{\mathcal{Z}(T, \mu, V)}\textrm{exp}(-\beta \hat{H} + \beta \mu \hat{N})
+\end{align}
+
+	式(1)中, $\mathcal{Z}$是巨配分函数, $\hat{H}$是电子状态的哈密顿算符, $\hat{N}$是电子数目算符. 在量子力学中, 所有的算符都是Hermit算符, 可以对角化且本征值为实数. 而且由于$E_i$和$N_i$是对易的(不作证明), 所以二者可以同时对角化. 式(1)可以写作:
+	
+\begin{align}
+	\rho = \sum_i \frac{e^{-\beta E_i + \beta \mu N_i}}{\mathcal{Z}(T, \mu, V)} |e_i\rangle \langle e_i|
+\end{align}
+
+	式(2)中$E_i$是能量算符的本征值, $N_i$是粒子数算符的本征值, 而$|e_i\rangle$是二者共同的本征态. \\
+	
+	为了满足归一化关系, 巨分配函数需要满足式(3)的条件:
+	
+\begin{align}
+	\mathcal{Z}(T, \mu, V) = \textrm{Tr}(exp(-\beta \hat{H} + \beta \mu \hat{N})) = \sum_i e^{-\beta E_i + \beta \mu N_i}
+\end{align}
+
+	在电子密度极高的条件下, 可以忽略电子之间的相互作用力. 这样电子云系统的能量就是单个电子能量之和. 电子的能量不是连续分布的, 而是只能取一些特定的值. 这样我们可以取一种基底, 这种基底表示每个状态下的粒子数目是多少, 用 $\{ n_i \}$ 表示. $n_i$表示在第n个状态下的粒子数目. 对于玻色子, $n_i$可以取0到$\infty$. 由于电子是费米子, $n_i$只能取0到1.\cite{1 {1994}} \\
+	
+	这样我们可以把式(3)写作
+	
+\begin{align}
+	\mathcal{Z}(T, \mu, V) = \sum_{\{ n_k \}} e^{-\beta (\sum_k{\epsilon_k n_k}) + \beta \mu (\sum_k n_k)} = \prod_k [ \sum_{ n_k } (e^{-\beta \epsilon_k + \beta \mu })^{n_k} ]
+\end{align}
+
+	定义某个态的配分函数, 有
+	
+\begin{align}
+	\mathcal{Z}_k(T, \mu, V) &= \sum_{ n_k } (e^{-\beta \epsilon_k + \beta \mu })^{n_k} = \sum_{ n_k } (e^{-\beta \epsilon_k + \beta \mu })^{n_k} = \sum_{ n_k } (e^{-\beta \epsilon_k})^{n_k} z ^ {n_k} 
+\end{align}
+
+	式(5)中$z$定义为
+	
+\begin{align*}
+	z \equiv e^{\beta \mu}
+\end{align*}
+
+	式(4)可以写作
+	
+\begin{align}
+	\mathcal{Z}(T, \mu, V) = \prod_k \mathcal{Z}_k(T, \mu, V)
+\end{align}
+
+	对于费米子系统而言, 根据泡利不相容原理, 它每个态只可能有两种粒子数, 即0和1. 这样我们可以计算出
+	
+\begin{align}
+	\mathcal{Z}_k(T, \mu, V) = \sum_{k = 0}^1 (e^{-\beta \epsilon_k})^{n_k} z ^ {n_k} = 1 + ze^{-\beta \epsilon_k}
+\end{align}
+
+	根据巨正则配分函数的定义, 我们可以直接写出系统的巨热力势:
+	
+\begin{align}
+	\Phi = -k_B T\textrm{ln} \mathcal{Z} = k_B T\sum_k \textrm{ln}(1+ze^{-\beta \epsilon_k})
+\end{align}
+
+	对于电子而言, 其能量能级和动量有着一一映射关系, 我们可以把上述求和写作
+	
+\begin{align}
+	\Phi = k_B T\sum_{\vec{p}} \textrm{ln}(1+ze^{-\beta \epsilon_{\vec{p}}})
+\end{align}
+
+	电子的动量其实是量子化的, 设电子在边长为$L$的空间中形成驻波, 则有
+	
+\begin{align*}
+	\vec{p} = \frac{2\pi \hbar}{L} \vec{k}
+\end{align*}
+	
+	上述求和表示在整个相空间中对不同动量的粒子状态求和. 由于能级间的差距特别小, 式(8)可以看作积分:
+	
+\begin{align*}
+	\Phi(T, \mu, V) = gk_B T \frac{L^3}{(2\pi\hbar)^3}\int dp_1 \int dp_2 \int dp_3 \textrm{ln}(1+ze^{-\beta \epsilon_{\vec{p}}})
+\end{align*}
+
+	在球坐标下, 有
+	
+\begin{align}
+	\Phi(T, \mu, V)  = g\frac{2V}{\sqrt{\pi}\lambda_{th}^3}\int^\infty_0 (\beta \epsilon)^\frac{1}{2} d(\beta \epsilon) \textrm{ln}(1+ze^{-\beta \epsilon_{\vec{p}}})
+\end{align}
+
+	式(10)中g为简并度, $\lambda_{th}$为德布罗意波长, 为
+	
+\begin{align*}
+	\lambda_{th} \equiv \frac{h}{\sqrt{2\pi m k_B T}}
+\end{align*}
+
+	定义$f$函数, 有
+	
+\begin{align*}
+	f_\nu(z) \equiv \frac{1}{\Gamma(\nu)} \int_0^\infty \frac{1}{z^{-1}e^x + 1}x^{\nu - 1} dx
+\end{align*}
+
+	对式(10)进行一次分部积分, 就可以得到
+	
+\begin{align}
+	\Phi(T, \mu, V)  = -gk_B T \frac{V}{\lambda_{th}^3} \frac{1}{\Gamma(\frac{5}{2})} \int_0^\infty \frac{1}{z^{-1}e^x + 1}x^{\frac{5}{2} - 1} dx= -k_BT\frac{V}{\lambda_{th}^3}f_{\frac{5}{2}}(z)
+\end{align}
+
+	对于内能U, 有
+	
+\begin{align}
+	U = -\frac{\partial}{\partial \beta} ln\mathcal{Z} = g\frac{d}{2} k_B T\frac{V}{\lambda_{th}^3}f_{\frac{5}{2}}(z)
+\end{align}
+
+	对于压强p, 有
+	
+\begin{align}
+	p = -(\frac{\partial\Phi}{\partial V})_{T, \mu} = g\frac{k_B T}{\lambda_{th}^3} f_{\frac{5}{2}}(z)
+\end{align}
+
+	由式(12)与(13)得
+	
+\begin{align}
+	pV = \frac{2}{d}U
+\end{align}
+
+	当温度特别低的时候, $z>>1$, 且
+	
+\begin{align*}
+	\frac{1}{z^{-1}e^x + 1}x^{d/2 - 1}
+\end{align*} 
+
+	几近于一个阶跃函数, 在$\epsilon > \mu$的时候, 函数几乎为0. 所以式(10)可以简化为
+	
+\begin{align*}
+	\Phi(T, \mu, V) \approx g\frac{2V}{\sqrt{\pi}\lambda_{th}^3}\int^{\beta \mu}_0 (\beta \epsilon)^\frac{1}{2} d(\beta \epsilon) \textrm{ln}(1+ze^{-\beta \epsilon_{\vec{p}}})
+\end{align*}
+
+	同样做一次分部积分, 有
+	
+\begin{align}
+	\Phi(T, \mu, V) \approx -gk_B T \frac{V}{\lambda_{th}^3} \frac{1}{\Gamma(\frac{5}{2})} \int_0^{\beta \mu} x^{\frac{5}{2} - 1} dx = -g\frac{2}{5}k_B T\frac{V}{\lambda_{th}^3} \frac{1}{\Gamma(\frac{5}{2})} (\beta \mu)^{\frac{5}{2}}
+\end{align}
+
+	可以得到粒子数$N$的表达式
+	
+\begin{align}
+	N = (z\frac{\partial}{\partial z} \textrm{ln}\mathcal{Z})_{T, V} \approx g\frac{2}{3}\frac{V(2\pi m \mu)^{\frac{3}{2}}}{h^3\Gamma(\frac{3}{2})}
+\end{align}
+
+	固定粒子数, 求$\mu$, 得到费米能
+	
+\begin{align}
+	\epsilon_F = \frac{h^2}{2\pi m}[\frac{n}{g}\Gamma(\frac{5}{2})]^{\frac{2}{3}}
+\end{align}
+
+	式(17)中$n$为粒子密度. 对于电子而言, 每个状态有两个自旋自由度, 故简并度为2, 所以有
+	
+\begin{align}
+	\epsilon_F = \frac{\hbar^2}{2m}(3\pi^2 n)^{\frac{2}{3}}
+\end{align}
+
+	同时可以得到
+	
+\begin{align}
+	U = g\frac{V}{\lambda_{th}^3}\frac{1}{\Gamma(\frac{2}{3})}k_B T\int^\infty_0\frac{x^{\frac{3}{2}}dx}{z^{-1}e^x + 1}\approx \frac{3}{5} N\epsilon_F
+\end{align}
+
+	由式(14)得
+	
+\begin{align}
+	p = \frac{2U}{3V} = \frac{2}{5} \frac{N\epsilon_F}{V}
+\end{align}
+
+	式(18)(19)(20)和徐教授上课得到的公式完全一致.
+	
+\section{电子气与金属的热容}
+
+\subsection{理论计算}
+
+	众所周知, 金属的热熔和金属的温度的三次方成正比, 这是金属晶格振动所贡献的.\cite{4 {2000}} 但是我们在计算热容量的时候, 并没有考虑到金属电子气对金属热容量的贡献. 这项贡献真的很小吗? 我们可以试着计算一下. \\
+	
+	由式(18)和式(19)可以得到
+	
+\begin{align}
+	C_V \equiv (\frac{\partial U}{\partial T})_{N, V} \approx N\frac{\pi^2}{2}\frac{k_B^2T}{\epsilon_F}
+\end{align}
+
+	在温度较高的时候, 金属的热容主要由金属晶格振动所贡献, 其热容遵循德拜规律, 与温度三次方成正比.\cite{4 {2000}} 但是当温度下降到0附近的时候, 晶格振动所贡献的热熔已经非常小了, 此时金属的主要取决于电子气的热容, 与温度的一次方近似成正比. \\
+	
+\subsection{和实验数据的差异}	
+
+	在实际实验中, 发现金属的热容和理论计算值相比较大, 大约相差$39\%$. \\
+
+	这一差异也可以定性解释. 金属中的电子在晶格粒子产生的周期性势场中运动, 电子与晶格上的离子存在长程的库仑力. 一个电子一方面要排斥其他电子, 一方面又要吸引周围的正离子, 从而在一个电子的周围出现等效的正电荷, 使得电子的电场受到屏蔽. 由于这种屏蔽效应, 使得电子之间库仑力从长程力变成了作用半径只有$\lambda$(成为德拜半径)的短程力, 大约只有$10^{-9}$m. 作为一种近似, 我们把电子看做近独立粒子.\cite{2 {2014}} \\
+	
+	但是电子其实不是真正的自由粒子, 粒子是绕正电荷旋转的, 称为准电子. 准电子的质量不是裸电子质量m, 而是有效质量$m'$.\cite{3 {2001}} 而且晶格振动对电子的有效质量也会有影响, 这些影响难以量化, 但是可以解释理论值和实验值的差距.
+	
+\section{白矮星和简并压}
+
+\subsection{白矮星简述}
+
+	白矮星是一种晚期的恒星, 星体中的热核燃料氢已经基本耗尽, 星体物质的主要成分是氢核聚变后的产物氦. 白矮星发出的光亮度很小, 其辐射能量主要来自于星体收缩时所释放的引力势能. 白矮星和太阳质量相当, 半径是太阳的几十分之一到百分之一. 所以白矮星密度非常高!\cite{2 {2014}} 白矮星一组典型的数据是:
+	
+\begin{align*}
+	M &\approx 10^{30} kg \\
+	\rho &\approx 10^{8}kg/m^3 \\
+	T &\approx 10^7 K
+\end{align*}
+
+\subsection{白矮星内部的电子气}
+
+	在如此极端的高温下, 白矮星的原子将全部电离成电子和氦原子核. 设白矮星一共由N个电子和$N/2$个氦原子核组成, 则其质量为
+	
+\begin{align}
+	M \approx N(2m_p + m_e) \approx 2Nm_p
+\end{align}
+
+	电子数密度可以近似为
+	
+\begin{align}
+	n = \frac{N}{V} \approx \frac{\rho}{2m_p} \approx 10^{36} m^{-3}
+\end{align}
+
+	这样我们可以估算白矮星内部电子气的费密能级
+	
+\begin{align}
+	\epsilon_F = \frac{\hbar^2}{2m}(3\pi^2n)^{\frac{2}{3}} = 0.5 \times 10^{-13}J \approx 0.3 MeV
+\end{align}
+
+	相应的费米温度\cite{3 {2001}}高达
+	
+\begin{align}
+	T_F = \frac{\epsilon_F}{k_B} \approx 4\times 10^9 K
+\end{align}
+
+	这个温度远高于白矮星的温度. 虽然白矮星的温度极端地高, 但是在这个数量级下, 白矮星的温度依然可以看作绝对零度. \\
+	
+	从上面的分析我们可以看出, 白矮星的质量和星体引力主要来自于氦核, 电子气体可以看作绝度零度下的费米气体. 如果没有电子气的简并压和引力相抗衡, 白矮星的自身引力将使它猛烈坍缩.\cite{2 {2014}} \\
+	
+	徐教授在课上曾经提到过, 白矮星之所以不会坍缩, 正是因为简并压的存在. 现在我们用一些半定量的估算, 证实了这种观点.
+
+\section{总结}
+
+	徐老师上课用简单的公式推导出了自由电子气的一些特性, 我从热力学与统计物理的角度出发, 证明了这些简单的计算其实是完全正确的. 另外我还根据讨论结果, 讨论了德拜理论在低温下的修正, 以及白矮星不会坍缩的原因. \\
+	
+	徐老师在课上使用了绝对零度的条件来讨论白矮星的成因, 但是白矮星的温度其实很高, 我从理论上估算了白矮星的费米温度, 证明了白矮星的温度其实远低于费米温度, 所以虽然白矮星的温度很高, 它表面的温度依然可以视作绝对零度.
+
+\begin{thebibliography}{0}
+	\bibitem{1 {1994}}
+	Walter Greiner, Ludwig Neise, Horst Stocker. Thermodynamics And Statistical Mechanics, Springer, 1994.
+	\bibitem{2 {2014}}
+	周子舫, 曹烈兆. 热力学与统计物理, 科学出版社, 2014.
+	\bibitem{3 {2001}}
+	赵凯华, 罗蔚茵. 新概念物理教程 量子物理, 高等教育教育出版社, 2001.
+	\bibitem{4 {2000}}
+	杨福家. 原子物理学, 高等教育出版社, 2000.
+\end{thebibliography}
+
+\end{CJK*}
+\end{document}

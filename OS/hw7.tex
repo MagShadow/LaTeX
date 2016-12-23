@@ -1,0 +1,78 @@
+% homework
+% 20161121
+% by hiaoxui
+
+\documentclass[a4paper, 12pt, notitlepage]{article}
+
+\usepackage{CJKutf8}
+\usepackage{indentfirst}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{float}
+
+\setlength{\parindent}{2em} 
+
+\begin{CJK*}{UTF8}{gbsn}
+\begin{document}
+
+\title{第七次OS作业}
+\author{秦光辉\ 1500011398}
+\maketitle
+
+\section{什么是虚拟设备? 实现虚拟设备的关键技术是什么?}
+
+	SPOOLing是多道程序设计系统中处理独占I/O设备的一种方法, 可以提高设备利用率并缩短单个程序的响应时间. SPOOLing又是一种虚拟设备技术, 可以及解决在进程所需的物理设备不存在或者被占用的情况下, 使用该设备. \\
+	
+	关键技术是SPOOLing技术. SPOOLing需要一种资源转换技术, 需要通过缓存进行. \\
+	
+\section{为什么引入设备独立性? 如何实现设备独立性?}
+
+	在计算机运行过程中, 不能因为设备的忙碌, 故障或更换而影响程序的运行. 设备管理器需要向用户屏蔽物理设备, 呈现给用户的一个操作简单的逻辑设备. 这样用户在编写程序, 访问各种I/O设备时, 无需事先指定特定的设备类型, 即同一段程序可以访问不同类型的I/O设备. \\
+	
+	实现的方案是将I/O软件按层次设计. 最底层是硬件, 硬件之上是中断处理器, 中断处理器之上是设备驱动, 设备驱动是和硬件相关的, 但是驱动之上的系统软件是硬件独立的. 它向用户提供一个友好, 清晰, 统一的接口. \\
+	
+	为实现设备独立性, OS把各种类型的设备划分为块设备和字符设备两类, 并为每一类定义了一个标准接口, 所有设备驱动程序都必须支持其中之一. \\
+	
+	设备独立的I/O软件是系统内核的一部分, 它的基本任务是实现所有设备都需要的一些通用的I/O功能, 并向用户级软件提供一个统一的接口. 它实现的功能有: 
+	
+\begin{enumerate}
+	\item 与设备驱动程序的统一接口
+	\item 提供与设备无关的数据块大小
+	\item 缓冲技术
+	\item 出错报告
+	\item 独占设备的分配和释放
+\end{enumerate}
+
+\section{假设磁盘有200个磁道, 磁盘请求队列中是一些随机请求, 它们按照到达的次序处于55, 58, 39, 18, 90, 160, 150, 38, 184号磁道上, 当前磁头在100号磁道上, 并向磁道号增加的方向上移动, 请给出按照FIFO, SSTF, SCAN算法进行磁盘调度时满足的请求次序, 并计算出它们的平均寻道长度}
+
+\subsection{FIFO}
+
+	所需要的寻道长度为:
+	
+\begin{align*}
+	L &= 45 + 3 + 19 + 21 + 72 + 70 + 10 + 112 + 146 = 498 \\
+	\bar l &= 498 \div 9 = 55.3 
+\end{align*}
+
+\subsection{SSTF}
+
+	所需要的寻道长度为:
+	
+\begin{align*}
+	L &= 10 + 32 + 3 + 16 + 1 + 20 + 132 + 10 + 24 = 246 \\
+	\bar l &= 246 \div 9 = 27.3 
+\end{align*}
+
+\subsection{SCAN}
+
+	所需要的寻道长度为:
+	
+\begin{align*}
+	L &= 50 + 10 + 24 + 94 + 32 + 3 + 16 + 1 + 20 = 250 \\
+	\bar l &= 250 \div 9 = 27.8
+\end{align*}
+
+\end{CJK*}
+\end{document}
